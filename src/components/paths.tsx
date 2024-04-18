@@ -23,9 +23,10 @@ export default function Paths({ files, image }: { files: Array<string | null>, i
 			{p.map(
 				(stak, nr) => {
 					const href = stak && stak.splice(stada ? 1 : 2).join('/')
+					console.log(href)
 					return (href &&
 						<li key={nr} className={active[nr] ? "a" : ""}>
-							<Link href={href}>
+							<Link href={'/' + href}>
 								{image ? <Image src={image} alt={image} width="250"
 									height="350"
 									style={{ filter: `hue-rotate(${nr * 90}deg)`, rotate: `${((-1) ** nr) * 2.5 * nr}deg` }} /> : ''}
