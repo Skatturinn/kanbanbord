@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Paths from "@/components/paths";
 import { readFilesFromDir } from "@/util/get_folders";
+import styles from '@/app/page.module.css'
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,9 +21,11 @@ export default async function RootLayout({
   return (
     <html lang="is">
       <body className={inter.className}>
-      <Paths files={files} image="" />
-		{children}
-        {children}</body>
+      <header>
+		<Paths files={files} image="" />
+	  </header>
+		<main className={styles.main}>{children}</main>
+        </body>
     </html>
   );
 }

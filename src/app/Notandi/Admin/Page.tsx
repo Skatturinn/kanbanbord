@@ -1,3 +1,4 @@
+'use client'
 import React, { useEffect, useState } from 'react';
 import Group from '@/components/Group';
 import Project from '@/components/Group';

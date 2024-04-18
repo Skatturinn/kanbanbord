@@ -16,11 +16,13 @@ export default function Paths({ files, image }: { files: Array<string | null>, i
 	return <nav>
 		<ol>
 			<li>
-				<Link href={'/'} />
+				<Link href={'/'}>
+					Heim
+					</Link>
 			</li>
 			{p.map(
 				(stak, nr) => {
-					const href = stak && stak.splice(stada ? -1 : -2).join('/')
+					const href = stak && stak.splice(stada ? 1 : 2).join('/')
 					return (href &&
 						<li key={nr} className={active[nr] ? "a" : ""}>
 							<Link href={href}>
