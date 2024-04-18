@@ -15,6 +15,9 @@ export default function Paths({ files, image }: { files: Array<string | null>, i
 	const stada = active.some(stak => stak)
 	return <nav>
 		<ol>
+			<li>
+				<Link href={'/'} />
+			</li>
 			{p.map(
 				(stak, nr) => {
 					const href = stak && stak.splice(stada ? -1 : -2).join('/')
