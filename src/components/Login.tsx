@@ -15,6 +15,7 @@ function Login() {
             const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/login`, { username, password });
             localStorage.setItem('authToken', response.data.token);
             localStorage.setItem('isLoggedIn', 'true'); 
+            localStorage.setItem('userId', response.data.id); 
             console.log('Logged in');
             if (response.data.isAdmin) {
                 router.push('/Notandi/Admin'); 

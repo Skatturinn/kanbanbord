@@ -1,109 +1,102 @@
 'use client'
-import React, { useState } from 'react';
-import Select from 'react-select';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import './User.css';
+import React, { useEffect, useState } from 'react';
+import { Project as ProjectComponent } from '@/components/Project';
+import styles from '../app/page.module.css';
 
-type Task = { id: string; content: string };
-type Tasks = { [key: string]: Task[] };
+type UserType = {
+    id: string;
+    group_id: string;
+};
 
-function User() {
-    const [groups, setGroups] = useState([{ value: 1, label: 'Group 1' }]);
-    const [selectedGroup, setSelectedGroup] = useState(null);
-    const [projects, setProjects] = useState([{ value: 1, label: 'Project 1' }]);
-    const [selectedProject, setSelectedProject] = useState(null);
-    const [tasks, setTasks] = useState<Tasks>({
-        '1': [{ id: 'task1', content: 'Task 1' }],
-        '2': [],
-        '3': [],
-        '4': [],
-        '5': [],
-    });
+type Group = {
+    id: string;
+};
 
-    const statusText = {
-        '1': 'Not Started',
-        '2': 'Working On It',
-        '3': 'Waiting for Review',
-        '4': 'Pending Deploy',
-        '5': 'Done',
-    };
+type Project = {
+    id: string;
+    group_id: string;
+    status: string;
+};
 
-    const handleGroupChange = (selectedOption: any) => {
-        setSelectedGroup(selectedOption);
-    };
+export default function User() {
+    const [group, setGroup] = useState<Group | null>(null);
+    const [projects, setProjects] = useState<Project[]>([]);
+    const [refreshProjects, setRefreshProjects] = useState(false);
 
-    const handleProjectChange = (selectedOption: any) => {
-        setSelectedProject(selectedOption);
-    };
+    const fetchProjects = async (group: string) => {
+        const authToken = localStorage.getItem('authToken');
+        let allProjects: Project[] = [];
 
-    const [isDragging, setIsDragging] = useState(false);
-
-    const handleDragStart = () => {
-        setIsDragging(true);
-    };
-
-    const handleDragEnd = (result: any) => {
-        console.log(result);
-        setIsDragging(false);
-
-        if (!result.destination) {
-            console.log('No destination found');
-            return;
+        for (let page = 1; page <= 2; page++) {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects?group_id=${group}&page=${page}`, {
+                headers: {
+                    'Authorization': `Bearer ${authToken}`
+                },
+            });
+            const data = await response.json();
+            allProjects = [...allProjects, ...data];
         }
 
-        const { source, destination } = result;
-        const sourceTasks = [...tasks[source.droppableId]];
-        const destinationTasks = [...tasks[destination.droppableId]];
-        const [removed] = sourceTasks.splice(source.index, 1);
-        destinationTasks.splice(destination.index, 0, removed);
+        allProjects.sort((a, b) => a.id.toString().localeCompare(b.id.toString()));
 
-        setTasks((prevTasks) => ({
-            ...prevTasks,
-            [source.droppableId]: sourceTasks,
-            [destination.droppableId]: destinationTasks,
-        }));
+        setProjects(allProjects);
     };
 
-    return (
-        <div>
-            <Select
-                value={selectedGroup}
-                onChange={handleGroupChange}
-                options={groups}
-                placeholder="Select a group"
-            />
-            <Select
-                value={selectedProject}
-                onChange={handleProjectChange}
-                options={projects}
-                placeholder="Select a project"
-            />
+    useEffect(() => {
+        const fetchUser = async () => {
+            const userId = localStorage.getItem('userId'); 
+            if (userId) {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${userId}`);
+                const data: UserType = await response.json();
+                setGroup({ id: data.group_id });
+                console.log(data.group_id);
+        
+                fetchProjects(data.group_id);
+            }
+        };
 
-            <DragDropContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-                <div className="status-columns">
-                    {Object.keys(statusText).map((status) => (
-                        <Droppable droppableId={status} key={status}>
-                            {(provided) => (
-                                <div className="status-column" ref={provided.innerRef} {...provided.droppableProps}>
-                                    <h2>{statusText[status as keyof typeof statusText]}</h2>
-                                    {tasks[status].map((task, index) => (
-                                        <Draggable key={task.id} draggableId={task.id} index={index}>
-                                            {(provided) => (
-                                                <div className="task" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                                                    {task.content || 'No content'}
-                                                </div>
-                                            )}
-                                        </Draggable>
-                                    ))}
-                                    {provided.placeholder}
-                                </div>
-                            )}
-                        </Droppable>
-                    ))}
+        fetchUser();
+    }, []);
+
+    useEffect(() => {
+        if (group) {
+            fetchProjects(group.id);
+        }
+    }, [group, refreshProjects]);
+
+    const handleUpdateProjectStatus = (projectId: string, status: string) => {
+        const projectData = { status };
+        const authToken = localStorage.getItem('authToken');
+    
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects/${projectId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+            },
+            body: JSON.stringify(projectData),
+        })
+            .then(response => response.json())
+            .then((data: Project) => {
+                setRefreshProjects(!refreshProjects);
+            });
+    }
+
+    return (
+        <div className={`${styles.container} ${styles.projectGrid}`}>
+            {projects.map((project: Project) => (
+                <div key={project.id} className={styles.card}>
+                    <ProjectComponent key={project.id + project.status} projectId={project.id} />
+                    <select value={project.status} onChange={(e) => handleUpdateProjectStatus(project.id, e.target.value)}>
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
                 </div>
-            </DragDropContext>
+            ))}
         </div>
     );
 }
-
-export default User;
