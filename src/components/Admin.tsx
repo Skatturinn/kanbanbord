@@ -1,138 +1,176 @@
 'use client'
 import React, { useEffect, useState } from 'react';
-import Group from '@/components/Group';
-import {Project} from '@/components/Project';
-import styles from '../app/page.module.css';
+import Select from 'react-select';
 
-function Admin() {
-    const [groups, setGroups] = useState<{ id: string }[]>([]);
-    const [projects, setProjects] = useState<{ id: string }[]>([]);
+function GroupForm() {
+    const [groups, setGroups] = useState([]);
+    const [selectedGroup, setSelectedGroup] = useState(null);
+    const [name, setName] = useState('');
 
     useEffect(() => {
         fetch(`${process.env.NEXT_PUBLIC_API_URL}/groups`)
             .then(response => response.json())
-            .then(data => setGroups(data));
-
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects`)
-            .then((response) => response.json())
-            .then((data) => setProjects(data));
+            .then(data => setGroups(data.map((group: any) => ({ value: group.id, label: group.name }))));
     }, []);
 
-    const handleCreateProject = () => {
-        const projectData = {
-            group_id: 1,
-            creator_id: 1,
-            assigned_id: 1,
-            title: "title",
-            status: "0-5",
-            description: "Project Description"
-        };
-
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(projectData),
-        })
-        .then(response => response.json())
-        .then(data => setProjects(prevProjects => [...prevProjects, data]));
+    const handleGroupChange = (selectedOption: any) => {
+        setSelectedGroup(selectedOption);
+        setName(selectedOption.label);
     };
 
-    const handleUpdateProject = (projectId: string) => {
-        const projectData = {
-            group_id: 1,
-            creator_id: 1,
-            assigned_id: 1,
-            title: "Updated title",
-            status: "0-5",
-            description: "Updated Project Description"
-        };
-
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects/${projectId}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(projectData),
-        })
-        .then(response => response.json())
-        .then(data => setProjects(prevProjects => prevProjects.map(project => project.id === projectId ? data : project)));
+    const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setName(event.target.value);
     };
 
-    const handleDeleteProject = (projectId: string) => {
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects/${projectId}`, {
-            method: 'DELETE',
-        })
-        .then(() => setProjects(prevProjects => prevProjects.filter(project => project.id !== projectId)));
-    };
-
-    const handleCreateGroup = () => {
+    const handleCreate = () => {
         const groupData = {
             admin_id: 1,
-            name: "Name"
+            name: name
         };
 
         fetch(`${process.env.NEXT_PUBLIC_API_URL}/groups`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('authToken')}`
             },
             body: JSON.stringify(groupData),
-        })
-        .then(response => response.json())
-        .then(data => setGroups(prevGroups => [...prevGroups, data]));
+        });
     };
 
-    const handleUpdateGroup = (groupId: string) => {
-        const groupData = {
-            admin_id: 1,
-            name: "Updated Name"
-        };
+    const handleUpdate = () => {
+        if (selectedGroup) {
+            const groupData = {
+                name: name
+            };
 
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/groups/${groupId}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(groupData),
-        })
-        .then(response => response.json())
-        .then(data => setGroups(prevGroups => prevGroups.map(group => group.id === groupId ? data : group)));
-    };
-
-    const handleDeleteGroup = (groupId: string) => {
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/groups/${groupId}`, {
-            method: 'DELETE',
-        })
-        .then(() => setGroups(prevGroups => prevGroups.filter(group => group.id !== groupId)));
+            fetch(`${process.env.NEXT_PUBLIC_API_URL}/groups/${(selectedGroup as any).value}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                },
+                body: JSON.stringify(groupData),
+            });
+        }
     };
 
     return (
-        <div className={styles.container}>
-            <div>
-            <h2>Groups</h2>
-            {groups.map(group => (
-                <div key={group.id}>
-                    <Group group={group} />
-                    <button className={styles.button} onClick={() => handleUpdateGroup(group.id)}>Update Group</button>
-                    <button className={styles.button} onClick={() => handleDeleteGroup(group.id)}>Delete Group</button>
-                </div>
-            ))}
-            <button className={styles.button} onClick ={handleCreateGroup}>Create Group</button>
-            </div>
-            <div>
-            <h2>Projects</h2>
-            {projects.map(project => (
-                <div key={project.id}>
-                    <Project projectId={project.id} />
-                    <button className={styles.button} onClick={() => handleUpdateProject(project.id)}>Update Project</button>
-                    <button className={styles.button} onClick={() => handleDeleteProject(project.id)}>Delete Project</button>
-                </div>
-            ))}
-            <button className={styles.button} onClick={handleCreateProject}>Create Project</button>
-            </div>
+        <div>
+            <form onSubmit={event => event.preventDefault()}>
+                <Select
+                    value={selectedGroup}
+                    onChange={handleGroupChange}
+                    options={groups}
+                />
+                <input type="text" value={name} onChange={handleNameChange} placeholder="Name" />
+                <button type="button" onClick={handleCreate}>Create Group</button>
+                <button type="button" onClick={handleUpdate}>Update Group</button>
+            </form>
         </div>
     );
-}
+};
+
+function ProjectForm() {
+    const [projects, setProjects] = useState([]);
+    const [selectedProject, setSelectedProject] = useState(null);
+    const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
+    const [status, setStatus] = useState('');
+    const [groupId, setGroupId] = useState('');
+    const [creatorId, setCreatorId] = useState('');
+    const [assignedId, setAssignedId] = useState('');
+
+    useEffect(() => {
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects`)
+            .then(response => response.json())
+            .then(data => setProjects(data.map((project: any) => ({ value: project.id, label: project.title }))));
+    }, []);
+
+    const handleProjectChange = (selectedOption: any) => {
+        setSelectedProject(selectedOption);
+        setTitle(selectedOption.label);
+        setDescription(selectedOption.description);
+        setStatus(selectedOption.status);
+        setGroupId(selectedOption.groupId);
+        setCreatorId(selectedOption.creatorId);
+        setAssignedId(selectedOption.assignedId);
+    };
+
+    const handleInputChange = (setter: React.Dispatch<React.SetStateAction<string>>) => (event: React.ChangeEvent<HTMLInputElement>) => {
+        setter(event.target.value);
+    };
+
+    const handleCreate = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        event.preventDefault();
+
+        const projectData = {
+            group_id: groupId,
+            creator_id: creatorId,
+            assigned_id: assignedId,
+            title: title,
+            status: status,
+            description: description
+        };
+
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+            },
+            body: JSON.stringify(projectData),
+        });
+    };
+
+    const handleUpdate = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        event.preventDefault();
+
+        if (selectedProject) {
+            const projectData = {
+                title: title,
+                description: description
+            };
+
+            fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects/${(selectedProject as any).value}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                },
+                body: JSON.stringify(projectData),
+            });
+        }
+    };
+
+    return (
+        <div>
+            <form onSubmit={event => event.preventDefault()}>
+                <Select
+                    value={selectedProject}
+                    onChange={handleProjectChange}
+                    options={projects}
+                />
+                <input type="text" value={groupId} onChange={handleInputChange(setGroupId)} placeholder="Group ID" />
+                <input type="text" value={creatorId} onChange={handleInputChange(setCreatorId)} placeholder="Creator ID" />
+                <input type="text" value={assignedId} onChange={handleInputChange(setAssignedId)} placeholder="Assigned ID" />
+                <input type="text" value={title} onChange={handleInputChange(setTitle)} placeholder="Title" />
+                <input type="text" value={status} onChange={handleInputChange(setStatus)} placeholder="Status" />
+                <input type="text" value={description} onChange={handleInputChange(setDescription)} placeholder="Description" />
+                <button type="button" onClick={handleCreate}>Create Project</button>
+                <button type="button" onClick={handleUpdate}>Update Project</button>
+            </form>
+        </div>
+    );
+};
+
+function Admin() {
+    return (
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <GroupForm />
+            <ProjectForm />
+        </div>
+    );
+};
+
 export default Admin;
