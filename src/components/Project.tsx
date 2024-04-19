@@ -1,19 +1,19 @@
 'use client'
 import React, { useEffect, useState } from 'react';
 
-interface Project {
+export interface Project {
   title: string;
   status: string;
 }
 
-export function Project({ projectId }: { projectId: string }) {
+export function Project({ id }: { id: string }) {
   const [project, setProject] = useState<Project | null>(null);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects/${projectId}`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects/${id}`)
       .then((response) => response.json())
       .then((data) => setProject(data));
-  }, [projectId]);
+  }, [id]);
 
   if (!project) {
     return <div>Loading...</div>;
