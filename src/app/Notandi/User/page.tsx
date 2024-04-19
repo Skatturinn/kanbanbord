@@ -1,8 +1,8 @@
-import Admin from '../../../components/Admin';
+import User from '../../../components/User';
 import React from 'react';
 
 export default function Home(){
     return <div>
-        <Admin />
+        <User />
     </div>;
 }

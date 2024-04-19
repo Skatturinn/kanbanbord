@@ -1,7 +1,8 @@
 'use client'
 import React, { useState } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import axios from 'axios';
+
 
 function Login() {
     const [username, setUsername] = useState('');
@@ -15,7 +16,11 @@ function Login() {
             localStorage.setItem('authToken', response.data.token);
             localStorage.setItem('isLoggedIn', 'true'); 
             console.log('Logged in');
-            router.push('/'); 
+            if (response.data.isAdmin) {
+                router.push('/Notandi/Admin'); 
+            } else {
+                router.push('/Notandi/User'); 
+            }
         } catch (error) {
             console.error(error);
         }

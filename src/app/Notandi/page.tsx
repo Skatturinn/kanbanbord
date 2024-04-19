@@ -8,7 +8,6 @@ export default function Home() {
          <h1>Þetta er notendasíða</h1>
 		 <p>Hún er opin öllum, til að nota kanbanborð þarftu að skrá þig inn</p>
 		 <Link href="/Notandi/Login">Login</Link>
-     <Link href="/Notandi/Admin">Admin</Link>
     </div>
   );
 }
