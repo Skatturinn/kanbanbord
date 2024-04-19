@@ -23,7 +23,6 @@ export default function Paths({ files, image }: { files: Array<string | null>, i
 			{p.map(
 				(stak, nr) => {
 					const href = stak && stak.splice(stada ? 1 : 2).join('/')
-					console.log(href)
 					return (href &&
 						<li key={nr} className={active[nr] ? "a" : ""}>
 							<Link href={'/' + href}>
@@ -31,7 +30,9 @@ export default function Paths({ files, image }: { files: Array<string | null>, i
 									height="350"
 									style={{ filter: `hue-rotate(${nr * 90}deg)`, rotate: `${((-1) ** nr) * 2.5 * nr}deg` }} /> : ''}
 								{href.split('/').splice(-1)[0].replace(/\d+/g, match => ` ${match}`)}
-							</Link></li>)
+							</Link>
+							</li>
+							)
 				}
 			)}
 		</ol>
