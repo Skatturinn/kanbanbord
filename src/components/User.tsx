@@ -86,7 +86,7 @@ export default function User() {
         <div className={`${styles.container} ${styles.projectGrid}`}>
             {projects.map((project: Project) => (
                 <div key={project.id} className={styles.card}>
-                    <ProjectComponent key={project.id + project.status} projectId={project.id} />
+                    <ProjectComponent key={project.id + project.status} id={project.id} />
                     <select value={project.status} onChange={(e) => handleUpdateProjectStatus(project.id, e.target.value)}>
                         <option value="0">0</option>
                         <option value="1">1</option>
