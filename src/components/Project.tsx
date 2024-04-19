@@ -1,12 +1,12 @@
 'use client'
 import React, { useEffect, useState } from 'react';
 
-interface Project {
+export interface Project {
   title: string;
   status: string;
 }
 
-export function Project({ projectId }: { projectId: string }) {
+export function Project({ projectId }: { id: string }) {
   const [project, setProject] = useState<Project | null>(null);
 
   useEffect(() => {

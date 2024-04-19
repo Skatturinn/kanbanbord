@@ -59,7 +59,7 @@ export function AdminView() {
             <h2>Projects</h2>
             {projects.map(project => (
                 <div key={project.id}>
-                    <Project projectId={project.id} />
+                    {/* <Project projectId={project.id} /> */}
                     <button className={styles.button} onClick={() => handleUpdateProject(project.id)}>Update Project</button>
                     <button className={styles.button} onClick={() => handleDeleteProject(project.id)}>Delete Project</button>
                 </div>
