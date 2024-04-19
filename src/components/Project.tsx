@@ -6,14 +6,14 @@ export interface Project {
   status: string;
 }
 
-export function Project({ projectId }: { id: string }) {
+export function Project({ id }: { id: string }) {
   const [project, setProject] = useState<Project | null>(null);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects/${projectId}`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects/${id}`)
       .then((response) => response.json())
       .then((data) => setProject(data));
-  }, [projectId]);
+  }, [id]);
 
   if (!project) {
     return <div>Loading...</div>;
