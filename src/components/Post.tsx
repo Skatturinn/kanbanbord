@@ -65,6 +65,7 @@ export function Post({ type, token, id }: { type: 'users' | 'groups' | 'projects
 				type === 'groups' &&
 				<>
 					<Input label="admin id" type="number" field="admin_id" />
+					<Input label="Nafn" type="text" field="name" />
 				</>
 
 			}
@@ -91,7 +92,7 @@ export function Post({ type, token, id }: { type: 'users' | 'groups' | 'projects
 					: ''
 			}
 			{
-				errors ?
+				Object.keys(errors).length ?
 					<p>{JSON.stringify(errors)}</p>
 					: ''
 			}
