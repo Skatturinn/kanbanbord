@@ -18,12 +18,12 @@ export default function Paths({ files, image }: { files: Array<string | null>, i
 			<li>
 				<Link href={'/'}>
 					Heim
-					</Link>
+				</Link>
 			</li>
 			{p.map(
 				(stak, nr) => {
 					const href = stak && stak.splice(stada ? 1 : 2).join('/')
-					return (href &&
+					return (href && !href.includes('api') &&
 						<li key={nr} className={active[nr] ? "a" : ""}>
 							<Link href={'/' + href}>
 								{image ? <Image src={image} alt={image} width="250"
@@ -31,8 +31,8 @@ export default function Paths({ files, image }: { files: Array<string | null>, i
 									style={{ filter: `hue-rotate(${nr * 90}deg)`, rotate: `${((-1) ** nr) * 2.5 * nr}deg` }} /> : ''}
 								{href.split('/').splice(-1)[0].replace(/\d+/g, match => ` ${match}`)}
 							</Link>
-							</li>
-							)
+						</li>
+					)
 				}
 			)}
 		</ol>
