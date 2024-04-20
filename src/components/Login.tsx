@@ -1,39 +1,71 @@
 'use client'
 import React, { useState } from 'react';
+import { useForm } from "react-hook-form";
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
 
-
+export type FormData = {
+	username: string;
+	password: string;
+};
 function Login() {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const router = useRouter(); 
+	const { register, handleSubmit, control, formState: { errors } } = useForm<FormData>();
+	const router = useRouter();
+	const [error, setError] = useState('')
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        try {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/login`, { username, password });
-            localStorage.setItem('authToken', response.data.token);
-            localStorage.setItem('isLoggedIn', 'true'); 
-            localStorage.setItem('userId', response.data.id); 
-            console.log('Logged in');
-            if (response.data.isAdmin) {
-                router.push('/Notandi/Admin'); 
-            } else {
-                router.push('/Notandi/User'); 
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    return (
-        <form onSubmit={handleSubmit}>
-            <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username" />
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" />
-            <button type="submit">Login</button>
-        </form>
-    );
+	const onSubmit = async ({ username, password }: FormData) => {
+		try {
+			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login`,
+				{
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ username, password })
+				}
+			)
+			const data = await response.json()
+			if (response.status === 200) {
+				await fetch('/api/login',
+					{
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify({ id: data.id, token: data.token })
+					}
+				)
+				if (data.isAdmin) {
+					router.push('/Notandi/Admin');
+				} else {
+					router.push('/Notandi/User');
+				}
+			} else {
+				setError(`${response.status}: ${response.statusText} ${data && (data?.error || JSON.stringify(data))}`)
+			}
+		} catch (err) {
+			err && setError(JSON.stringify(err));
+		}
+	};
+	return (
+		<form onSubmit={handleSubmit(onSubmit)}>
+			<label
+				htmlFor='username' >Notendanafn:</label>
+			<input
+				type="text"
+				placeholder=""
+				{...register('username', { required: true })}
+			/>
+			<label
+				htmlFor='password' >Lykilorð:</label>
+			<input
+				type="text"
+				placeholder=""
+				{...register('password', { required: true })}
+			/>
+			<button type="submit">Login</button>
+			{
+				error ?
+					<p>{error}</p>
+					: ''
+			}
+		</form>
+	);
 }
 
 export default Login;
