@@ -7,6 +7,12 @@ export type FormData = {
 	username: string;
 	password: string;
 };
+
+export function LoginButton({ className }: { className?: string }) {
+	const router = useRouter();
+	return <button className={className} onClick={() => router.push('/Notandi/Login')}>Login</button>
+}
+
 function Login() {
 	const { register, handleSubmit, control, formState: { errors } } = useForm<FormData>();
 	const router = useRouter();

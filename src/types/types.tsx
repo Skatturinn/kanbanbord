@@ -8,6 +8,7 @@ export type notandi = {
 }
 
 export type project = {
+	id: number,
 	status: number,
 	title: string,
 	group_id: number,

@@ -5,7 +5,7 @@ import { group, notandi, project } from "@/types/types";
 import { useState } from "react";
 
 
-export function Post({ type, token, id }: { type: 'users' | 'groups' | 'projects', token: string, id?: string }) {
+export function Post({ type, token, id, data }: { type: 'users' | 'groups' | 'projects', token: string, id?: string, data?: notandi | group | project }) {
 	const { register, handleSubmit, control, formState: { errors } } = useForm<notandi | group | project>();
 	const [error, setError] = useState('')
 	function Input({ label, type, field, required = false }: { label: string, type: string, field: keyof notandi | keyof group | keyof project, required?: boolean }) {

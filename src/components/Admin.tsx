@@ -1,176 +1,105 @@
 'use client'
-import React, { useEffect, useState } from 'react';
-import Select from 'react-select';
+import { Post } from '@/components/Post';
+import React, { useState, useEffect } from 'react';
+import { group, notandi, project } from "@/types/types";
+import Cookies from 'js-cookie';
 
-function GroupForm() {
-	const [groups, setGroups] = useState([]);
-	const [selectedGroup, setSelectedGroup] = useState(null);
-	const [name, setName] = useState('');
+export default function Admin() {
+	const token = Cookies.get('token');
+	const id = Cookies.get('id');
+
+	const [usersPage, setUsersPage] = useState(1);
+	const [groupsPage, setGroupsPage] = useState(1);
+	const [projectsPage, setProjectsPage] = useState(1);
+
+	const [users, setUsers] = useState<notandi[] | undefined>();
+	const [groups, setGroups] = useState<group[] | undefined>();
+	const [projects, setProjects] = useState<project[] | undefined>();
+
+	const [totalUsers, setTotalUsers] = useState(0);
+	const [totalGroups, setTotalGroups] = useState(0);
+	const [totalProjects, setTotalProjects] = useState(0);
+
+	const [isHydrated, setIsHydrated] = useState(false);
+
+	const fetchData = async (type: 'users' | 'groups' | 'projects', page: number) => {
+		if (token !== undefined && id !== undefined) {
+			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${type}?page=${page}`,
+				{
+					method: 'GET',
+					headers: {
+						'Content-Type': 'application/json',
+						'Authorization': `Bearer ${token}`
+					}
+				}
+			)
+			const info = await response.json();
+			if (type === 'users') setTotalUsers(info.total);
+			if (type === 'groups') setTotalGroups(info.total);
+			if (type === 'projects') setTotalProjects(info.total);
+			return info;
+		}
+	}
 
 	useEffect(() => {
-		fetch(`${process.env.NEXT_PUBLIC_API_URL}/groups`)
-			.then(response => response.json())
-			.then(data => setGroups(data.map((group: any) => ({ value: group.id, label: group.name }))));
+		fetchData('users', usersPage).then(data => setUsers(data));
+		fetchData('groups', groupsPage).then(data => setGroups(data));
+		fetchData('projects', projectsPage).then(data => setProjects(data));
+	}, [usersPage, groupsPage, projectsPage]);
+
+	useEffect(() => {
+		setIsHydrated(true);
 	}, []);
-
-	const handleGroupChange = (selectedOption: any) => {
-		setSelectedGroup(selectedOption);
-		setName(selectedOption.label);
-	};
-
-	const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setName(event.target.value);
-	};
-
-	const handleCreate = () => {
-		const groupData = {
-			admin_id: 1,
-			name: name
-		};
-
-		fetch(`${process.env.NEXT_PUBLIC_API_URL}/groups`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-			},
-			body: JSON.stringify(groupData),
-		});
-	};
-
-	const handleUpdate = () => {
-		if (selectedGroup) {
-			const groupData = {
-				name: name
-			};
-
-			fetch(`${process.env.NEXT_PUBLIC_API_URL}/groups/${(selectedGroup as any).value}`, {
-				method: 'PUT',
-				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-				},
-				body: JSON.stringify(groupData),
-			});
-		}
-	};
 
 	return (
 		<div>
-			<form onSubmit={event => event.preventDefault()}>
-				<Select
-					value={selectedGroup}
-					onChange={handleGroupChange}
-					options={groups}
-				/>
-				<input type="text" value={name} onChange={handleNameChange} placeholder="Name" />
-				<button type="button" onClick={handleCreate}>Create Group</button>
-				<button type="button" onClick={handleUpdate}>Update Group</button>
-			</form>
+			<section>
+				<h2>Users (Total: {totalUsers})</h2>
+				{isHydrated && token?.valueOf() ? (
+					users?.map(user => (
+						<div key={user.id}>
+							<h3>{user.username}</h3>
+							<p>Admin: {user.isadmin ? 'Yes' : 'No'}</p>
+							<p>Group ID: {user.group_id}</p>
+						</div>
+					))
+				) : (
+					<p>Loading...</p>
+				)}
+				<button onClick={() => setUsersPage(usersPage - 1)}>Previous</button>
+				<button onClick={() => setUsersPage(usersPage + 1)}>Next</button>
+			</section>
+			<section>
+				<h2>Groups (Total: {totalGroups})</h2>
+				{isHydrated && token?.valueOf() ? (
+					groups?.map(group => (
+						<div key={group.id}>
+							<h3>{group.name}</h3>
+							<p>Admin ID: {group.admin_id}</p>
+						</div>
+					))
+				) : (
+					<p>Loading...</p>
+				)}
+				<button onClick={() => setGroupsPage(groupsPage - 1)}>Previous</button>
+				<button onClick={() => setGroupsPage(groupsPage + 1)}>Next</button>
+			</section>
+			<section>
+				<h2>Projects (Total: {totalProjects})</h2>
+				{isHydrated && token?.valueOf() ? (
+					projects?.map(project => (
+						<div key={project.id}>
+							<h3>{project.title}</h3>
+							<p>Status: {project.status}</p>
+							<p>Description: {project.description}</p>
+						</div>
+					))
+				) : (
+					<p>Loading...</p>
+				)}
+				<button onClick={() => setProjectsPage(projectsPage - 1)}>Previous</button>
+				<button onClick={() => setProjectsPage(projectsPage + 1)}>Next</button>
+			</section>
 		</div>
-	);
-};
-
-function ProjectForm() {
-	const [projects, setProjects] = useState([]);
-	const [selectedProject, setSelectedProject] = useState(null);
-	const [title, setTitle] = useState('');
-	const [description, setDescription] = useState('');
-	const [status, setStatus] = useState('');
-	const [groupId, setGroupId] = useState('');
-	const [creatorId, setCreatorId] = useState('');
-	const [assignedId, setAssignedId] = useState('');
-
-	useEffect(() => {
-		fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects`)
-			.then(response => response.json())
-			.then(data => setProjects(data.map((project: any) => ({ value: project.id, label: project.title }))));
-	}, []);
-
-	const handleProjectChange = (selectedOption: any) => {
-		setSelectedProject(selectedOption);
-		setTitle(selectedOption.label);
-		setDescription(selectedOption.description);
-		setStatus(selectedOption.status);
-		setGroupId(selectedOption.groupId);
-		setCreatorId(selectedOption.creatorId);
-		setAssignedId(selectedOption.assignedId);
-	};
-
-	const handleInputChange = (setter: React.Dispatch<React.SetStateAction<string>>) => (event: React.ChangeEvent<HTMLInputElement>) => {
-		setter(event.target.value);
-	};
-
-	const handleCreate = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-		event.preventDefault();
-
-		const projectData = {
-			group_id: groupId,
-			creator_id: creatorId,
-			assigned_id: assignedId,
-			title: title,
-			status: status,
-			description: description
-		};
-
-		fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-			},
-			body: JSON.stringify(projectData),
-		});
-	};
-
-	const handleUpdate = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-		event.preventDefault();
-
-		if (selectedProject) {
-			const projectData = {
-				title: title,
-				description: description
-			};
-
-			fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects/${(selectedProject as any).value}`, {
-				method: 'PUT',
-				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-				},
-				body: JSON.stringify(projectData),
-			});
-		}
-	};
-
-	return (
-		<div>
-			<form onSubmit={event => event.preventDefault()}>
-				<Select
-					value={selectedProject}
-					onChange={handleProjectChange}
-					options={projects}
-				/>
-				<input type="text" value={groupId} onChange={handleInputChange(setGroupId)} placeholder="Group ID" />
-				<input type="text" value={creatorId} onChange={handleInputChange(setCreatorId)} placeholder="Creator ID" />
-				<input type="text" value={assignedId} onChange={handleInputChange(setAssignedId)} placeholder="Assigned ID" />
-				<input type="text" value={title} onChange={handleInputChange(setTitle)} placeholder="Title" />
-				<input type="text" value={status} onChange={handleInputChange(setStatus)} placeholder="Status" />
-				<input type="text" value={description} onChange={handleInputChange(setDescription)} placeholder="Description" />
-				<button type="button" onClick={handleCreate}>Create Project</button>
-				<button type="button" onClick={handleUpdate}>Update Project</button>
-			</form>
-		</div>
-	);
-};
-
-function Admin() {
-	return (
-		<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-			<GroupForm />
-			<ProjectForm />
-		</div>
-	);
-};
-
-export default Admin;
+	)
+}

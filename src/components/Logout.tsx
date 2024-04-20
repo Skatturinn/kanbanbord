@@ -1,11 +1,14 @@
 'use client'
-import { useRouter } from 'next/navigation';
 
-export function Logout() {
-	const router = useRouter();
-	return <button onClick={
-		() => fetch('/api/login',
-			{ method: 'DELETE' }
-		).finally(() => router.refresh())
-	}>Logout</button> || ''
+export function Logout({ className }: { className?: string }) {
+	const logout = () => {
+		fetch('/api/login', { method: 'DELETE' })
+			.finally(() => {
+				if (typeof window !== 'undefined') {
+					window.location.href = '/';
+				}
+			});
+	};
+
+	return <button className={className} onClick={logout}>Logout</button> || '';
 }
