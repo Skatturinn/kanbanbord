@@ -2,7 +2,7 @@ import Image from "next/image";
 import styles from "./page.module.css";
 import Link from "next/link";
 import Login from "@/components/Login";
-import ProjectsComponent, { GroupsComponent, UsersComponent } from "@/components/Admin";
+import { GroupsComponent, UsersComponent, ProjectsComponent } from "@/components/Admin";
 import { cookies } from "next/headers";
 import { Notandi } from "@/components/Notandi";
 import { Verkefni } from "@/components/Verkefni";

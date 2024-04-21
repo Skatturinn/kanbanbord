@@ -8,6 +8,12 @@ export type FormData = {
 	username: string;
 	password: string;
 };
+
+export function LoginButton({ className }: { className?: string }) {
+	const router = useRouter();
+	return <button className={className} onClick={() => router.push('/Notandi/Login')}>Login</button>
+}
+
 function Login() {
 	const { register, handleSubmit, control, formState: { errors } } = useForm<FormData>();
 	const router = useRouter();
@@ -29,7 +35,7 @@ function Login() {
 				if (data.isAdmin) {
 					router.push('/Notandi/Admin');
 				} else {
-					router.push('/Notandi/User');
+					router.push('/Kanbanbord');
 				}
 			} else {
 				setError(`${response.status >= 300}: ${response.statusText} ${data && (data?.error || JSON.stringify(data))}`)

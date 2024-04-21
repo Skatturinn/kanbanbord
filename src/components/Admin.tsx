@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { group, notandi, project } from "@/types/types";
 import styles from './Admin.module.scss';
 
@@ -10,7 +10,15 @@ export function UsersComponent({ token }: { token: string }) {
 	const [totalUsers, setTotalUsers] = useState(0);
 	const [isHydrated, setIsHydrated] = useState(false);
 
-	const fetchData = async () => {
+	const handleLoadPrevious = () => {
+		setUsersPage(prevPage => prevPage > 1 ? prevPage - 1 : 1);
+	}
+
+	const handleLoadMore = () => {
+		setUsersPage(prevPage => prevPage + 1);
+	}
+
+	const fetchData = useCallback(async () => {
 		if (token !== undefined) {
 			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users?page=${usersPage}`,
 				{
@@ -22,18 +30,19 @@ export function UsersComponent({ token }: { token: string }) {
 				}
 			)
 			const info = await response.json();
-			setTotalUsers(info.total);
 			setUsers(info);
 		}
-	}
+	}, [token, usersPage]);
 
 	useEffect(() => {
 		fetchData();
-	});
+	}, [fetchData]);
 
 	useEffect(() => {
 		setIsHydrated(true);
 	}, []);
+
+
 
 	return (
 		<section className={styles.container}>
@@ -53,8 +62,8 @@ export function UsersComponent({ token }: { token: string }) {
 				:
 				<p>Loading...</p>
 			}
-			<button onClick={() => setUsersPage(usersPage - 1)}>Previous</button>
-			<button onClick={() => setUsersPage(usersPage + 1)}>Next</button>
+			<button onClick={handleLoadPrevious}>Previous</button>
+			<button onClick={handleLoadMore}>Next</button>
 		</section>
 	)
 }
@@ -66,7 +75,15 @@ export function GroupsComponent({ token }: { token: string }) {
 	const [totalGroups, setTotalGroups] = useState(0);
 	const [isHydrated, setIsHydrated] = useState(false);
 
-	const fetchData = async () => {
+	const handleLoadPrevious = () => {
+		setGroupsPage(prevPage => prevPage > 1 ? prevPage - 1 : 1);
+	}
+
+	const handleLoadMore = () => {
+		setGroupsPage(prevPage => prevPage + 1);
+	}
+
+	const fetchData = useCallback(async () => {
 		if (token !== undefined) {
 			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/groups?page=${groupsPage}`,
 				{
@@ -78,14 +95,13 @@ export function GroupsComponent({ token }: { token: string }) {
 				}
 			)
 			const info = await response.json();
-			setTotalGroups(info.total);
 			setGroups(info);
 		}
-	}
+	}, [token, groupsPage]);
 
 	useEffect(() => {
 		fetchData();
-	});
+	}, [fetchData]);
 
 	useEffect(() => {
 		setIsHydrated(true);
@@ -108,20 +124,20 @@ export function GroupsComponent({ token }: { token: string }) {
 				:
 				<p>Loading...</p>
 			}
-			<button onClick={() => setGroupsPage(groupsPage - 1)}>Previous</button>
-			<button onClick={() => setGroupsPage(groupsPage + 1)}>Next</button>
+			<button onClick={handleLoadPrevious}>Previous</button>
+			<button onClick={handleLoadMore}>Next</button>
 		</section>
 	)
 }
 
-export default function ProjectsComponent({ token }: { token: string }) {
+export function ProjectsComponent({ token }: { token: string }) {
 
 	const [projectsPage, setProjectsPage] = useState(1);
 	const [projects, setProjects] = useState<project[] | undefined>();
 	const [totalProjects, setTotalProjects] = useState(0);
 	const [isHydrated, setIsHydrated] = useState(false);
 
-	const fetchData = async () => {
+	const fetchData = useCallback(async () => {
 		if (token !== undefined) {
 			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects?page=${projectsPage}`,
 				{
@@ -133,14 +149,21 @@ export default function ProjectsComponent({ token }: { token: string }) {
 				}
 			)
 			const info = await response.json();
-			setTotalProjects(info.total);
 			setProjects(info);
 		}
+	}, [token, projectsPage]);
+
+	const handleLoadPrevious = () => {
+		setProjectsPage(prevPage => prevPage > 1 ? prevPage - 1 : 1);
+	}
+
+	const handleLoadMore = () => {
+		setProjectsPage(prevPage => prevPage + 1);
 	}
 
 	useEffect(() => {
 		fetchData();
-	});
+	}, [fetchData]);
 
 	useEffect(() => {
 		setIsHydrated(true);
@@ -164,8 +187,8 @@ export default function ProjectsComponent({ token }: { token: string }) {
 				:
 				<p>Loading...</p>
 			}
-			<button onClick={() => setProjectsPage(projectsPage - 1)}>Previous</button>
-			<button onClick={() => setProjectsPage(projectsPage + 1)}>Next</button>
+			<button onClick={handleLoadPrevious}>Previous</button>
+			<button onClick={handleLoadMore}>Next</button>
 		</section>
 	)
 }

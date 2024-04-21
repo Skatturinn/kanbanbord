@@ -1,10 +1,11 @@
-import Admin, { GroupsComponent, UsersComponent } from '@/components/Admin';
+import { GroupsComponent, UsersComponent, ProjectsComponent } from '@/components/Admin';
 import { Post } from '@/components/Post';
+import { Patch } from '@/components/Patch';
 import { auth } from '@/util/auth';
 import { cookies } from 'next/headers';
+import { Delete } from '@/components/Delete';
 import React from 'react';
 import Link from "next/link";
-import ProjectsComponent from '@/components/Admin';
 
 export default async function Home() {
 	const hnetur = cookies();
@@ -28,6 +29,19 @@ export default async function Home() {
 				<UsersComponent token={token.value} />
 				<GroupsComponent token={token.value} />
 				<ProjectsComponent token={token.value} />
+			</section>
+			<section>
+				<h1>Uppfæra</h1>
+				<h2>Notendur</h2>
+				<Patch type='users' token={token.value} />
+				<h2>Hópa</h2>
+				<Patch type='groups' token={token.value} />
+				<h2>Verkefni</h2>
+				<Patch type='projects' token={token.value} />
+			</section>
+			<section>
+				<h1>Eyða</h1>
+				<Delete token={token.value} />
 			</section>
 		</div>
 		if (!a.isAdmin && a.login) return <p>Ert ekki innskráður sem admin notandi.</p>

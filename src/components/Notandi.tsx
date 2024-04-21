@@ -1,15 +1,20 @@
 'use client'
 import { notandi } from "@/types/types";
 import { useState, useEffect } from "react";
+import { PatchUser } from "./PatchUser";
 import useFetch from "react-fetch-hook";
 import Image from "next/image";
 
-
-
 export function Notandi({ id, token }: { id: string, token: string }) {
-	const { isLoading, error, data } = useFetch<notandi>(`${process.env.NEXT_PUBLIC_API_URL}/users/${id}`);
+	const [refresh, setRefresh] = useState(0);
+	const { isLoading, error, data } = useFetch<notandi>(`${process.env.NEXT_PUBLIC_API_URL}/users/${id}?refresh=${refresh}`);
 	const [group, setGroup] = useState('')
 	const [avatarUrl, setAvatarUrl] = useState('');
+
+	const updateUserProfile = () => {
+		// Increment the refresh state to trigger a re-fetch of the user data
+		setRefresh(refresh + 1);
+	};
 
 	useEffect(() => {
 		if (data?.avatar) {
@@ -19,6 +24,7 @@ export function Notandi({ id, token }: { id: string, token: string }) {
 				.catch(err => console.error(err));
 		}
 	}, [data?.avatar]);
+
 	if (isLoading) return <p className="loading">Sæki gögn</p>
 	if (error) return <div>
 		<p>{error.message}</p>
@@ -34,12 +40,14 @@ export function Notandi({ id, token }: { id: string, token: string }) {
 				response.json().then(group => setGroup(group?.name)
 				))
 		return <>
-			<div >
+			<div>
 				<Image src={avatarUrl} alt="Avatar" width={75} height={75} />
 				<h1>{data.username}</h1>
 				<p>{'Hópur: ' + group}</p>
 				<p>{'admin: ' + data.isadmin}</p>
 			</div>
+			<h1>Breyta Aðgangi</h1>
+			<PatchUser type='users' token={token} id={id} onSuccess={updateUserProfile} />
 		</>
 	}
 }

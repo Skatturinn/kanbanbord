@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { cookies } from 'next/headers'
+import User from "@/components/User";
 
 export default function Home() {
 	const hnetur = cookies();
@@ -10,7 +11,7 @@ export default function Home() {
 		token?.value && id?.value ?
 			<div>
 				<h2>Þín Verkefni</h2>
-				<p>Hér þarf að útfæra kanban borð</p>
+				<User token={token.value} />
 			</div> :
 			<div>
 				<h1>Þetta er kanbansíða</h1>
