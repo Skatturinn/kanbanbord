@@ -3,6 +3,7 @@ import { Post } from '@/components/Post';
 import { Patch } from '@/components/Patch';
 import { auth } from '@/util/auth';
 import { cookies } from 'next/headers';
+import { Delete } from '@/components/Delete';
 import React from 'react';
 import Link from "next/link";
 
@@ -32,11 +33,15 @@ export default async function Home() {
 			<section>
 				<h1>Uppfæra</h1>
 				<h2>Notendur</h2>
-				<Patch type='users' id={id?.value} token={token.value} />
+				<Patch type='users' token={token.value} />
 				<h2>Hópa</h2>
-				<Patch type='groups' id={id?.value} token={token.value} />
+				<Patch type='groups' token={token.value} />
 				<h2>Verkefni</h2>
-				<Patch type='projects' id={id?.value} token={token.value} />
+				<Patch type='projects' token={token.value} />
+			</section>
+			<section>
+				<h1>Eyða</h1>
+				<Delete token={token.value} />
 			</section>
 		</div>
 		if (!a.isAdmin && a.login) return <p>Ert ekki innskráður sem admin notandi.</p>

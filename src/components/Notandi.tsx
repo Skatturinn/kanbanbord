@@ -1,7 +1,7 @@
 'use client'
 import { notandi } from "@/types/types";
 import { useState, useEffect } from "react";
-import { Patch } from "./Patch";
+import { PatchUser } from "./PatchUser";
 import useFetch from "react-fetch-hook";
 import Image from "next/image";
 
@@ -11,6 +11,10 @@ export function Notandi({ id, token }: { id: string, token: string }) {
 	const [group, setGroup] = useState('')
 	const [avatarUrl, setAvatarUrl] = useState('');
 
+	const updateUserProfile = () => {
+		// Increment the refresh state to trigger a re-fetch of the user data
+		setRefresh(refresh + 1);
+	};
 
 	useEffect(() => {
 		if (data?.avatar) {
@@ -20,6 +24,7 @@ export function Notandi({ id, token }: { id: string, token: string }) {
 				.catch(err => console.error(err));
 		}
 	}, [data?.avatar]);
+
 	if (isLoading) return <p className="loading">Sæki gögn</p>
 	if (error) return <div>
 		<p>{error.message}</p>
@@ -42,7 +47,7 @@ export function Notandi({ id, token }: { id: string, token: string }) {
 				<p>{'admin: ' + data.isadmin}</p>
 			</div>
 			<h1>Breyta Aðgangi</h1>
-			<Patch type='users' token={token} id={id} />
+			<PatchUser type='users' token={token} id={id} onSuccess={updateUserProfile} />
 		</>
 	}
 }

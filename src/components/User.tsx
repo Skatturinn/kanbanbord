@@ -36,7 +36,10 @@ export default function User({ token }: UserType) {
                 },
             });
             const data = await response.json();
-            allProjects = [...allProjects, ...data];
+            console.log(data);
+            if (Array.isArray(data)) {
+                allProjects = [...allProjects, ...data];
+            }
         }
 
         allProjects.sort((a, b) => a.id.toString().localeCompare(b.id.toString()));

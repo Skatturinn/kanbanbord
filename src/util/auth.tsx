@@ -10,6 +10,10 @@ export async function auth(token: string, path = '/api/authenticate') {
 			body: JSON.stringify({ token })
 		}
 	)
-	const data = await response.json() as { login?: boolean, isAdmin?: boolean, message?: string }
-	return data
+	if (response.ok) {
+		const data = await response.json() as { login?: boolean, isAdmin?: boolean, message?: string }
+		return data
+	} else {
+		throw new Error(`HTTP error! status: ${response.status}`);
+	}
 }

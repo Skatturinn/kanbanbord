@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { group, notandi, project } from "@/types/types";
 import styles from './Admin.module.scss';
 
@@ -18,7 +18,7 @@ export function UsersComponent({ token }: { token: string }) {
 		setUsersPage(prevPage => prevPage + 1);
 	}
 
-	const fetchData = async () => {
+	const fetchData = useCallback(async () => {
 		if (token !== undefined) {
 			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users?page=${usersPage}`,
 				{
@@ -32,11 +32,11 @@ export function UsersComponent({ token }: { token: string }) {
 			const info = await response.json();
 			setUsers(info);
 		}
-	}
+	}, [token, usersPage]);
 
 	useEffect(() => {
 		fetchData();
-	}, [token, usersPage]);
+	}, [fetchData]);
 
 	useEffect(() => {
 		setIsHydrated(true);
@@ -83,7 +83,7 @@ export function GroupsComponent({ token }: { token: string }) {
 		setGroupsPage(prevPage => prevPage + 1);
 	}
 
-	const fetchData = async () => {
+	const fetchData = useCallback(async () => {
 		if (token !== undefined) {
 			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/groups?page=${groupsPage}`,
 				{
@@ -97,11 +97,11 @@ export function GroupsComponent({ token }: { token: string }) {
 			const info = await response.json();
 			setGroups(info);
 		}
-	}
+	}, [token, groupsPage]);
 
 	useEffect(() => {
 		fetchData();
-	}, [token, groupsPage]);
+	}, [fetchData]);
 
 	useEffect(() => {
 		setIsHydrated(true);
@@ -137,7 +137,7 @@ export function ProjectsComponent({ token }: { token: string }) {
 	const [totalProjects, setTotalProjects] = useState(0);
 	const [isHydrated, setIsHydrated] = useState(false);
 
-	const fetchData = async () => {
+	const fetchData = useCallback(async () => {
 		if (token !== undefined) {
 			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects?page=${projectsPage}`,
 				{
@@ -151,7 +151,7 @@ export function ProjectsComponent({ token }: { token: string }) {
 			const info = await response.json();
 			setProjects(info);
 		}
-	}
+	}, [token, projectsPage]);
 
 	const handleLoadPrevious = () => {
 		setProjectsPage(prevPage => prevPage > 1 ? prevPage - 1 : 1);
@@ -163,7 +163,7 @@ export function ProjectsComponent({ token }: { token: string }) {
 
 	useEffect(() => {
 		fetchData();
-	}, [token, projectsPage]);
+	}, [fetchData]);
 
 	useEffect(() => {
 		setIsHydrated(true);
