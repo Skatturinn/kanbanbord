@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Paths from "../components/Paths";
+import Paths from "@/components/Paths";
 import { readFilesFromDir } from "@/util/get_folders";
 import styles from '@/app/layout.module.scss'
 import { Logout } from "@/components/Logout";
