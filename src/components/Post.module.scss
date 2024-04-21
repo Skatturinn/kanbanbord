@@ -1,0 +1,25 @@
+.post {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	gap: 1em;
+	margin: 2em 0;
+
+	label {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5em;
+		flex: 1;
+
+		input {
+			justify-self: flex-start;
+			text-align: start;
+			padding: 0.5em;
+			border-radius: 0.25em;
+		}
+	}
+
+	button {
+		justify-self: center;
+	}
+}

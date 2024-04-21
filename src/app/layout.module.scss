@@ -1,0 +1,24 @@
+.footer {
+	display: flex;
+	justify-content: space-between;
+	flex-direction: row;
+	margin: 1em 0.5em;
+	flex-wrap: wrap;
+	align-items: center;
+}
+
+.main {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	padding: 6rem;
+	min-height: 100svh;
+
+	div {
+		display: flex;
+		gap: 0.25em;
+		flex-wrap: wrap;
+		flex-direction: column;
+	}
+}

@@ -1,176 +1,171 @@
 'use client'
-import React, { useEffect, useState } from 'react';
-import Select from 'react-select';
+import React, { useState, useEffect } from 'react';
+import { group, notandi, project } from "@/types/types";
+import styles from './Admin.module.scss';
 
-function GroupForm() {
-	const [groups, setGroups] = useState([]);
-	const [selectedGroup, setSelectedGroup] = useState(null);
-	const [name, setName] = useState('');
+export function UsersComponent({ token }: { token: string }) {
+
+	const [usersPage, setUsersPage] = useState(1);
+	const [users, setUsers] = useState<notandi[] | undefined>();
+	const [totalUsers, setTotalUsers] = useState(0);
+	const [isHydrated, setIsHydrated] = useState(false);
+
+	const fetchData = async () => {
+		if (token !== undefined) {
+			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users?page=${usersPage}`,
+				{
+					method: 'GET',
+					headers: {
+						'Content-Type': 'application/json',
+						'Authorization': `Bearer ${token}`
+					}
+				}
+			)
+			const info = await response.json();
+			setTotalUsers(info.total);
+			setUsers(info);
+		}
+	}
 
 	useEffect(() => {
-		fetch(`${process.env.NEXT_PUBLIC_API_URL}/groups`)
-			.then(response => response.json())
-			.then(data => setGroups(data.map((group: any) => ({ value: group.id, label: group.name }))));
-	}, []);
-
-	const handleGroupChange = (selectedOption: any) => {
-		setSelectedGroup(selectedOption);
-		setName(selectedOption.label);
-	};
-
-	const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setName(event.target.value);
-	};
-
-	const handleCreate = () => {
-		const groupData = {
-			admin_id: 1,
-			name: name
-		};
-
-		fetch(`${process.env.NEXT_PUBLIC_API_URL}/groups`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-			},
-			body: JSON.stringify(groupData),
-		});
-	};
-
-	const handleUpdate = () => {
-		if (selectedGroup) {
-			const groupData = {
-				name: name
-			};
-
-			fetch(`${process.env.NEXT_PUBLIC_API_URL}/groups/${(selectedGroup as any).value}`, {
-				method: 'PUT',
-				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-				},
-				body: JSON.stringify(groupData),
-			});
-		}
-	};
-
-	return (
-		<div>
-			<form onSubmit={event => event.preventDefault()}>
-				<Select
-					value={selectedGroup}
-					onChange={handleGroupChange}
-					options={groups}
-				/>
-				<input type="text" value={name} onChange={handleNameChange} placeholder="Name" />
-				<button type="button" onClick={handleCreate}>Create Group</button>
-				<button type="button" onClick={handleUpdate}>Update Group</button>
-			</form>
-		</div>
-	);
-};
-
-function ProjectForm() {
-	const [projects, setProjects] = useState([]);
-	const [selectedProject, setSelectedProject] = useState(null);
-	const [title, setTitle] = useState('');
-	const [description, setDescription] = useState('');
-	const [status, setStatus] = useState('');
-	const [groupId, setGroupId] = useState('');
-	const [creatorId, setCreatorId] = useState('');
-	const [assignedId, setAssignedId] = useState('');
+		fetchData();
+	});
 
 	useEffect(() => {
-		fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects`)
-			.then(response => response.json())
-			.then(data => setProjects(data.map((project: any) => ({ value: project.id, label: project.title }))));
+		setIsHydrated(true);
 	}, []);
 
-	const handleProjectChange = (selectedOption: any) => {
-		setSelectedProject(selectedOption);
-		setTitle(selectedOption.label);
-		setDescription(selectedOption.description);
-		setStatus(selectedOption.status);
-		setGroupId(selectedOption.groupId);
-		setCreatorId(selectedOption.creatorId);
-		setAssignedId(selectedOption.assignedId);
-	};
+	return (
+		<section className={styles.container}>
+			<h2><a href="/Notandi/Admin/users">Users</a> page: {usersPage}</h2>
+			{isHydrated && token?.valueOf() ?
+				<ul>
+					{users?.map(user => (
+						<li key={user.id} className={styles.user}>
+							<a href={`/Notandi/Admin/users/${user.id}`}>
+								<h3>{user.username}</h3>
+								<p>Admin: {user.isadmin ? 'Yes' : 'No'}</p>
+								<p>Group ID: {user.group_id}</p>
+							</a>
+						</li>
+					))}
+				</ul>
+				:
+				<p>Loading...</p>
+			}
+			<button onClick={() => setUsersPage(usersPage - 1)}>Previous</button>
+			<button onClick={() => setUsersPage(usersPage + 1)}>Next</button>
+		</section>
+	)
+}
 
-	const handleInputChange = (setter: React.Dispatch<React.SetStateAction<string>>) => (event: React.ChangeEvent<HTMLInputElement>) => {
-		setter(event.target.value);
-	};
+export function GroupsComponent({ token }: { token: string }) {
 
-	const handleCreate = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-		event.preventDefault();
+	const [groupsPage, setGroupsPage] = useState(1);
+	const [groups, setGroups] = useState<group[] | undefined>();
+	const [totalGroups, setTotalGroups] = useState(0);
+	const [isHydrated, setIsHydrated] = useState(false);
 
-		const projectData = {
-			group_id: groupId,
-			creator_id: creatorId,
-			assigned_id: assignedId,
-			title: title,
-			status: status,
-			description: description
-		};
-
-		fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-			},
-			body: JSON.stringify(projectData),
-		});
-	};
-
-	const handleUpdate = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-		event.preventDefault();
-
-		if (selectedProject) {
-			const projectData = {
-				title: title,
-				description: description
-			};
-
-			fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects/${(selectedProject as any).value}`, {
-				method: 'PUT',
-				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-				},
-				body: JSON.stringify(projectData),
-			});
+	const fetchData = async () => {
+		if (token !== undefined) {
+			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/groups?page=${groupsPage}`,
+				{
+					method: 'GET',
+					headers: {
+						'Content-Type': 'application/json',
+						'Authorization': `Bearer ${token}`
+					}
+				}
+			)
+			const info = await response.json();
+			setTotalGroups(info.total);
+			setGroups(info);
 		}
-	};
+	}
+
+	useEffect(() => {
+		fetchData();
+	});
+
+	useEffect(() => {
+		setIsHydrated(true);
+	}, []);
 
 	return (
-		<div>
-			<form onSubmit={event => event.preventDefault()}>
-				<Select
-					value={selectedProject}
-					onChange={handleProjectChange}
-					options={projects}
-				/>
-				<input type="text" value={groupId} onChange={handleInputChange(setGroupId)} placeholder="Group ID" />
-				<input type="text" value={creatorId} onChange={handleInputChange(setCreatorId)} placeholder="Creator ID" />
-				<input type="text" value={assignedId} onChange={handleInputChange(setAssignedId)} placeholder="Assigned ID" />
-				<input type="text" value={title} onChange={handleInputChange(setTitle)} placeholder="Title" />
-				<input type="text" value={status} onChange={handleInputChange(setStatus)} placeholder="Status" />
-				<input type="text" value={description} onChange={handleInputChange(setDescription)} placeholder="Description" />
-				<button type="button" onClick={handleCreate}>Create Project</button>
-				<button type="button" onClick={handleUpdate}>Update Project</button>
-			</form>
-		</div>
-	);
-};
+		<section className={styles.container}>
+			<h2><a href="/Notandi/Admin/groups">Groups</a> page: {groupsPage}</h2>
+			{isHydrated && token?.valueOf() ?
+				<ul>
+					{groups?.map(group => (
+						<li key={group.id} className={styles.user}>
+							<a href={`/Notandi/Admin/groups/${group.id}`}>
+								<h3>{group.name}</h3>
+								<p>Admin ID: {group.admin_id}</p>
+							</a>
+						</li>
+					))}
+				</ul>
+				:
+				<p>Loading...</p>
+			}
+			<button onClick={() => setGroupsPage(groupsPage - 1)}>Previous</button>
+			<button onClick={() => setGroupsPage(groupsPage + 1)}>Next</button>
+		</section>
+	)
+}
 
-function Admin() {
+export default function ProjectsComponent({ token }: { token: string }) {
+
+	const [projectsPage, setProjectsPage] = useState(1);
+	const [projects, setProjects] = useState<project[] | undefined>();
+	const [totalProjects, setTotalProjects] = useState(0);
+	const [isHydrated, setIsHydrated] = useState(false);
+
+	const fetchData = async () => {
+		if (token !== undefined) {
+			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects?page=${projectsPage}`,
+				{
+					method: 'GET',
+					headers: {
+						'Content-Type': 'application/json',
+						'Authorization': `Bearer ${token}`
+					}
+				}
+			)
+			const info = await response.json();
+			setTotalProjects(info.total);
+			setProjects(info);
+		}
+	}
+
+	useEffect(() => {
+		fetchData();
+	});
+
+	useEffect(() => {
+		setIsHydrated(true);
+	}, []);
+
 	return (
-		<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-			<GroupForm />
-			<ProjectForm />
-		</div>
-	);
-};
-
-export default Admin;
+		<section className={styles.container}>
+			<h2><a href="/Notandi/Admin/projects">Projects</a> page: {projectsPage}</h2>
+			{isHydrated && token?.valueOf() ?
+				<ul>
+					{projects?.map(project => (
+						<li key={project?.id} className={styles.user}>
+							<a href={`/Notandi/Admin/users/${project?.id}`}>
+								<h3>{project.title}</h3>
+								<p>Status: {project.status}</p>
+								<p>Description: {project.description}</p>
+							</a>
+						</li>
+					))}
+				</ul>
+				:
+				<p>Loading...</p>
+			}
+			<button onClick={() => setProjectsPage(projectsPage - 1)}>Previous</button>
+			<button onClick={() => setProjectsPage(projectsPage + 1)}>Next</button>
+		</section>
+	)
+}
