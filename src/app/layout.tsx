@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Paths from "@/components/paths";
+import Paths from "@/components/Paths";
 import { readFilesFromDir } from "@/util/get_folders";
-import styles from '@/app/page.module.css'
+import styles from '@/app/layout.module.scss'
 import { Logout } from "@/components/Logout";
+import Link from "next/link";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,8 +27,10 @@ export default async function RootLayout({
 					<Paths files={files} image="" />
 				</header>
 				<main className={styles.main}>{children}</main>
-				<footer>
+				<footer className={styles.footer}>
 					<Logout />
+					<p>Elli og Addi production</p>
+					<Link href={'/Notandi/Admin'}>Admin</Link>
 				</footer>
 			</body>
 		</html>

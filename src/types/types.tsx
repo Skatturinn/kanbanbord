@@ -1,5 +1,6 @@
 export type notandi = {
 	avatar?: string;
+	avatar64?: string;
 	group_id?: number;
 	id: number;
 	isadmin: boolean;
@@ -13,7 +14,8 @@ export type project = {
 	group_id: number,
 	creator_id: number,
 	assigned_id?: number,
-	description?: string
+	description?: string,
+	id?: number
 };
 
 export type group = {

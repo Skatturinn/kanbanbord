@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useForm } from "react-hook-form";
 import { useRouter } from 'next/navigation';
+import styles from './Login.module.scss';
 
 export type FormData = {
 	username: string;
@@ -38,7 +39,7 @@ function Login() {
 		}
 	};
 	return (
-		<form onSubmit={handleSubmit(onSubmit)}>
+		<form onSubmit={handleSubmit(onSubmit)} className={styles.login}>
 			<label
 				htmlFor='username' >Notendanafn:</label>
 			<input

@@ -1,0 +1,43 @@
+.paths {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: space-evenly;
+	list-style: none;
+	margin: 1em 0;
+
+	li:nth-child(n),
+	li:nth-child(n) {
+		color: black;
+		padding: 2em;
+		border-radius: 1em;
+		font-size: large;
+		filter: drop-shadow(10px 30px 50px #000000);
+
+		a {
+			background-color: transparent;
+		}
+	}
+
+	li:nth-child(1n),
+	li:nth-child(1n) {
+		background-color: #ff65a3;
+	}
+
+	li:nth-child(2n),
+	li:nth-child(2n) {
+		background-color: #7afcff;
+	}
+
+	li:nth-child(3n),
+	li:nth-child(3n) {
+		background-color: #feff9c;
+	}
+
+	li:nth-child(4n),
+	li:nth-child(4n) {
+		background-color: #fff740;
+	}
+
+
+}
