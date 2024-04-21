@@ -3,10 +3,10 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Paths from "@/components/paths";
 import { readFilesFromDir } from "@/util/get_folders";
-import styles from '@/app/page.module.css'
-import NavBar from "@/components/NavBar";
+import styles from '@/app/layout.module.scss'
 import { Logout } from "@/components/Logout";
-
+import Link from "next/link";
+import NavBar from "@/components/NavBar";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -29,8 +29,10 @@ export default async function RootLayout({
 					<NavBar files={files} image="" /> {/* Use the NavBar component */}
 				</header>
 				<main className={styles.main}>{children}</main>
-				<footer>
-					{/* The Logout component is now in the NavBar */}
+				<footer className={styles.footer}>
+					<Logout />
+					<p>Elli og Addi production</p>
+					<Link href={'/Notandi/Admin'}>Admin</Link>
 				</footer>
 			</body>
 		</html>

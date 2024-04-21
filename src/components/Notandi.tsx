@@ -1,13 +1,16 @@
 'use client'
 import { notandi } from "@/types/types";
 import { useState, useEffect } from "react";
+import { Patch } from "./Patch";
 import useFetch from "react-fetch-hook";
-import styles from '@/app/page.module.css';
+import Image from "next/image";
 
 export function Notandi({ id, token }: { id: string, token: string }) {
-	const { isLoading, error, data } = useFetch<notandi>(`${process.env.NEXT_PUBLIC_API_URL}/users/${id}`);
+	const [refresh, setRefresh] = useState(0);
+	const { isLoading, error, data } = useFetch<notandi>(`${process.env.NEXT_PUBLIC_API_URL}/users/${id}?refresh=${refresh}`);
 	const [group, setGroup] = useState('')
 	const [avatarUrl, setAvatarUrl] = useState('');
+
 
 	useEffect(() => {
 		if (data?.avatar) {
@@ -17,9 +20,11 @@ export function Notandi({ id, token }: { id: string, token: string }) {
 				.catch(err => console.error(err));
 		}
 	}, [data?.avatar]);
-
 	if (isLoading) return <p className="loading">Sæki gögn</p>
-	if (error) return <p>Villa við að sækja gögn, vinsamlegast reynið aftur</p>
+	if (error) return <div>
+		<p>{error.message}</p>
+		<p>Villa við að sækja gögn, vinsamlegast reynið aftur</p>
+	</div>
 	if (data) {
 		Number(data.group_id) && fetch(`${process.env.NEXT_PUBLIC_API_URL}/groups/${data.group_id}`,
 			{
@@ -29,17 +34,15 @@ export function Notandi({ id, token }: { id: string, token: string }) {
 			response =>
 				response.json().then(group => setGroup(group?.name)
 				))
-		return (
-			<div className={styles.profile}>
-				<div className={styles.avatarContainer}>
-					<img className={styles.avatar} src={avatarUrl} alt="Avatar" />
-				</div>
-				<div className={styles.info}>
-					<h1 className={styles.username}>{data.username}</h1>
-					<p className={styles.group}>{'Hópur: ' + group}</p>
-					<p className={styles.admin}>{'admin: ' + data.isadmin}</p>
-				</div>
+		return <>
+			<div>
+				<Image src={avatarUrl} alt="Avatar" width={75} height={75} />
+				<h1>{data.username}</h1>
+				<p>{'Hópur: ' + group}</p>
+				<p>{'admin: ' + data.isadmin}</p>
 			</div>
-		);
+			<h1>Breyta Aðgangi</h1>
+			<Patch type='users' token={token} id={id} />
+		</>
 	}
 }

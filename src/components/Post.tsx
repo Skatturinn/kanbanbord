@@ -3,10 +3,14 @@ import { Form, useForm } from "react-hook-form";
 import useFetch from 'react-fetch-hook';
 import { group, notandi, project } from "@/types/types";
 import { useState } from "react";
+import styles from "./Post.module.scss";
+import { Placeholder } from "react-select/animated";
+import { b64hex } from "@/util/breytamynd";
+import { filterEmptyStrings } from "@/util/filterempty";
 
 
-export function Post({ type, token, id, data }: { type: 'users' | 'groups' | 'projects', token: string, id?: string, data?: notandi | group | project }) {
-	const { register, handleSubmit, control, formState: { errors } } = useForm<notandi | group | project>();
+export function Post({ type, token, id }: { type: 'users' | 'groups' | 'projects', token: string, id?: string }) {
+	const { register, handleSubmit, control, formState: { errors } } = useForm<FormData | notandi | group | project>();
 	const [error, setError] = useState('')
 	function Input({ label, type, field, required = false }: { label: string, type: string, field: keyof notandi | keyof group | keyof project, required?: boolean }) {
 		return <label>
@@ -16,7 +20,10 @@ export function Post({ type, token, id, data }: { type: 'users' | 'groups' | 'pr
 			/>
 		</label>
 	}
-	const FormPost = async (data: notandi | group | project) => {
+	const FormPost = async (data: FormData | notandi | group | project) => {
+		if (type === 'users') {
+			data = b64hex(data as notandi)
+		}
 		try {
 			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${type}`,
 				{
@@ -25,7 +32,7 @@ export function Post({ type, token, id, data }: { type: 'users' | 'groups' | 'pr
 						'Content-Type': 'application/json',
 						'Authorization': `Bearer ${token}`
 					},
-					body: JSON.stringify(data)
+					body: JSON.stringify(filterEmptyStrings(data))
 				}
 			)
 			const message = await response.json()
@@ -39,11 +46,9 @@ export function Post({ type, token, id, data }: { type: 'users' | 'groups' | 'pr
 		}
 	}
 	return <>
-		<Form
-			action={`${process.env.NEXT_PUBLIC_API_URL}/${type}`}
-			control={control}
-			validateStatus={(status) => status >= 200}
-			headers={{ accessToken: token || '', 'Content-Type': 'application/json' }}
+		<form
+			onSubmit={handleSubmit(FormPost)}
+			className={styles.post}
 		>
 			{
 				type === 'users' &&
@@ -56,7 +61,11 @@ export function Post({ type, token, id, data }: { type: 'users' | 'groups' | 'pr
 						Mynd:
 						<input type="file"
 							accept=".png,.jpg,.jpeg"
-							{...register('avatar', { required: false })}
+							id="imageInput"
+						/>
+						<input type="text"
+							{...register('avatar', { required: false })
+							}
 						/>
 					</label>
 				</>
@@ -65,6 +74,7 @@ export function Post({ type, token, id, data }: { type: 'users' | 'groups' | 'pr
 				type === 'groups' &&
 				<>
 					<Input label="admin id" type="number" field="admin_id" />
+					<Input label="Nafn" type="text" field="name" />
 				</>
 
 			}
@@ -91,11 +101,12 @@ export function Post({ type, token, id, data }: { type: 'users' | 'groups' | 'pr
 					: ''
 			}
 			{
-				errors ?
-					<p>{JSON.stringify(errors)}</p>
+				Object.keys(errors).length ?
+					<p>{JSON.stringify(errors.root?.message)}</p>
+
 					: ''
 			}
 			<button>Submit</button>
-		</Form>
+		</form>
 	</>
 }

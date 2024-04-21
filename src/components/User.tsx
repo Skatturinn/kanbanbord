@@ -1,7 +1,7 @@
 'use client'
 import React, { useCallback, useEffect, useState } from 'react';
 import { Project as ProjectComponent } from '@/components/Project';
-import styles from '../app/page.module.css';
+import styles from "./User.module.scss";
 import { useCookies } from 'react-cookie';
 
 type UserType = {
@@ -23,7 +23,7 @@ export default function User({ token }: UserType) {
     const [group, setGroup] = useState<Group | null>(null);
     const [projects, setProjects] = useState<Project[]>([]);
     const [refreshProjects, setRefreshProjects] = useState(false);
-
+    const [cookies] = useCookies(['id']);
     const fetchProjects = useCallback(async (group: string) => {
         console.log(`fetchProjects is being called with group id: ${group}`);
         const authToken = token;
@@ -43,7 +43,6 @@ export default function User({ token }: UserType) {
 
         setProjects(allProjects);
     }, [token]);
-    const [cookies] = useCookies(['id']);
 
     useEffect(() => {
         console.log('id:', cookies.id);
@@ -72,13 +71,12 @@ export default function User({ token }: UserType) {
 
     const handleUpdateProjectStatus = (projectId: string, status: string) => {
         const projectData = { status };
-        const authToken = localStorage.getItem('authToken');
 
         fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects/${projectId}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${authToken}`
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(projectData),
         })
@@ -88,19 +86,23 @@ export default function User({ token }: UserType) {
             });
     }
 
+    const statuses = ['0', '1', '2', '3', '4', '5'];
+
     return (
-        <div className={`${styles.container} ${styles.projectGrid}`}>
-            {projects.map((project: Project) => (
-                <div key={project.id} className={styles.card}>
-                    <ProjectComponent key={project.id + project.status} id={project.id} />
-                    <select value={project.status} onChange={(e) => handleUpdateProjectStatus(project.id, e.target.value)}>
-                        <option value="0">0</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                    </select>
+        <div className={styles.projectContainer}>
+            {statuses.map((status) => (
+                <div key={status} className={styles.projectColumn}>
+                    <h2>Status {status}</h2>
+                    {projects.filter((project) => Number(project.status) === Number(status)).map((project: Project) => (
+                        <div key={project.id} className={styles.projectCard}>
+                            <ProjectComponent id={project.id} />
+                            <select value={project.status} onChange={(e) => handleUpdateProjectStatus(project.id, e.target.value)}>
+                                {statuses.map((statusOption) => (
+                                    <option key={statusOption} value={statusOption}>{statusOption}</option>
+                                ))}
+                            </select>
+                        </div>
+                    ))}
                 </div>
             ))}
         </div>
