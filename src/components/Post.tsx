@@ -103,6 +103,7 @@ export function Post({ type, token, id }: { type: 'users' | 'groups' | 'projects
 			{
 				Object.keys(errors).length ?
 					<p>{JSON.stringify(errors.root?.message)}</p>
+
 					: ''
 			}
 			<button>Submit</button>
