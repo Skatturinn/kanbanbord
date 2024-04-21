@@ -43,7 +43,7 @@ export function Post({ type, token, id }: { type: 'users' | 'groups' | 'projects
 			action={`${process.env.NEXT_PUBLIC_API_URL}/${type}`}
 			control={control}
 			validateStatus={(status) => status >= 200}
-			headers={{ accessToken: token || '', 'Content-Type': 'application/json' }}
+			headers={{ 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }}
 		>
 			{
 				type === 'users' &&

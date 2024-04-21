@@ -11,10 +11,11 @@ function Login() {
 	const { register, handleSubmit, control, formState: { errors } } = useForm<FormData>();
 	const router = useRouter();
 	const [error, setError] = useState('')
-
+	const [wait, setWait] = useState(false)
 	const onSubmit = async ({ username, password }: FormData) => {
 		try {
-			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login`,
+			setWait(true)
+			const response = await fetch('/api/login',
 				{
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
@@ -22,21 +23,15 @@ function Login() {
 				}
 			)
 			const data = await response.json()
-			if (response.status === 200) {
-				await fetch('/api/login',
-					{
-						method: 'POST',
-						headers: { 'Content-Type': 'application/json' },
-						body: JSON.stringify({ id: data.id, token: data.token })
-					}
-				)
+			setWait(false)
+			if (data.login) {
 				if (data.isAdmin) {
 					router.push('/Notandi/Admin');
 				} else {
 					router.push('/Notandi/User');
 				}
 			} else {
-				setError(`${response.status}: ${response.statusText} ${data && (data?.error || JSON.stringify(data))}`)
+				setError(`${response.status >= 300}: ${response.statusText} ${data && (data?.error || JSON.stringify(data))}`)
 			}
 		} catch (err) {
 			err && setError(JSON.stringify(err));
@@ -60,8 +55,16 @@ function Login() {
 			/>
 			<button type="submit">Login</button>
 			{
-				error ?
+				wait ? <p>Reyni að skrá þig inn</p> : ''
+			}
+			{
+				error !== '' && error !== '{}' ?
 					<p>{error}</p>
+					: ''
+			}
+			{
+				Object.keys(errors).length > 0 ?
+					<p>{JSON.stringify(Object.keys(errors))}</p>
 					: ''
 			}
 		</form>
