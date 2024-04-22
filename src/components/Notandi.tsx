@@ -18,7 +18,11 @@ export function Notandi({ id, token }: { id: string, token: string }) {
 
 	useEffect(() => {
 		if (data?.avatar) {
-			fetch(`/api/avatar?avatar=${data.avatar}`)
+			fetch(`/api/avatar`, {
+				method: "POST",
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ avatar: data.avatar })
+			})
 				.then(response => response.json())
 				.then(data => setAvatarUrl(data.avatarUrl))
 				.catch(err => console.error(err));
