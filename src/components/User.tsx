@@ -24,7 +24,6 @@ export default function User({ id, token }: UserType) {
 	const [projects, setProjects] = useState<Project[]>([]);
 	const [refreshProjects, setRefreshProjects] = useState(false);
 	const fetchProjects = useCallback(async (group: string) => {
-		console.log(`fetchProjects is being called with group id: ${group}`);
 		const authToken = token;
 		let allProjects: Project[] = [];
 
@@ -35,7 +34,6 @@ export default function User({ id, token }: UserType) {
 				},
 			});
 			const data = await response.json();
-			console.log(data);
 			if (Array.isArray(data)) {
 				allProjects = [...allProjects, ...data];
 			}
@@ -47,25 +45,22 @@ export default function User({ id, token }: UserType) {
 	}, [token]);
 
 	useEffect(() => {
-
 		const fetchUser = async () => {
 			if (id) {
 				const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${id}`);
 				const data: UserType = await response.json();
-				console.log('user data:', data);
 				setGroup({ id: data.group_id });
-				data.group_id && fetchProjects(data.group_id);
 			}
 		};
 
 		fetchUser();
-	});
+	}, [id]);
 
 	useEffect(() => {
-		if (group) {
-			group.id && fetchProjects(group.id);
+		if (group && group.id) {
+			fetchProjects(group.id);
 		}
-	}, [fetchProjects, group, refreshProjects]);
+	}, [fetchProjects, group]);
 
 	const handleUpdateProjectStatus = (projectId: string, status: string) => {
 		const projectData = { status };
@@ -80,7 +75,7 @@ export default function User({ id, token }: UserType) {
 		})
 			.then(response => response.json())
 			.then((data: Project) => {
-				setRefreshProjects(!refreshProjects);
+				setRefreshProjects(prev => !prev);
 			});
 	}
 

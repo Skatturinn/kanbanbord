@@ -41,7 +41,7 @@ export function Notandi({ id, token }: { id: string, token: string }) {
 				))
 		return <>
 			<div>
-				<Image src={avatarUrl} alt="Avatar" width={75} height={75} />
+				{avatarUrl ? <Image src={avatarUrl} alt="Avatar" width={75} height={75} /> : ''}
 				<h1>{data.username}</h1>
 				<p>{'Hópur: ' + group}</p>
 				<p>{'admin: ' + data.isadmin}</p>

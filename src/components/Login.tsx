@@ -20,7 +20,6 @@ function Login() {
 	const [error, setError] = useState('')
 	const [wait, setWait] = useState(false)
 	const onSubmit = async ({ username, password }: FormData) => {
-		console.log(username, password)
 		try {
 			setWait(true)
 			const response = await fetch('/api/login',
