@@ -16,6 +16,7 @@ export function LoginButton({ className }: { className?: string }) {
 
 function Login() {
 	const { register, handleSubmit, control, formState: { errors } } = useForm<FormData>();
+	const router = useRouter()
 	const [error, setError] = useState('')
 	const [wait, setWait] = useState(false)
 	const onSubmit = async ({ username, password }: FormData) => {
@@ -30,6 +31,15 @@ function Login() {
 			)
 			const data = await response.json()
 			setWait(false)
+			if (data.login) {
+				if (data.isAdmin) {
+					router.push('/Notandi/Admin');
+					return
+				} else {
+					router.push('/Notandi/User');
+					return
+				}
+			}
 			if (data.login) {
 				setError('Innskráning tókst')
 			} else {
