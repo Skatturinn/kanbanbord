@@ -11,7 +11,7 @@ export default function Home() {
 		token?.value && id?.value ?
 			<div>
 				<h2>Þín Verkefni</h2>
-				<User token={token.value} />
+				<User token={token.value} id={id.value} />
 			</div> :
 			<div>
 				<h1>Þetta er kanbansíða</h1>

@@ -7,6 +7,7 @@ import styles from '@/app/layout.module.scss'
 import { Logout } from "@/components/Logout";
 import Link from "next/link";
 import NavBar from "@/components/NavBar";
+import { LoginButton } from "@/components/Login";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -30,7 +31,10 @@ export default async function RootLayout({
 				</header>
 				<main className={styles.main}>{children}</main>
 				<footer className={styles.footer}>
-					<Logout />
+					<div>
+						<LoginButton className={styles.loginButton} />
+						<Logout />
+					</div>
 					<p>Elli og Addi production</p>
 					<Link href={'/Notandi/Admin'}>Admin</Link>
 				</footer>

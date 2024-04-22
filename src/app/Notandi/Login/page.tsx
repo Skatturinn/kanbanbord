@@ -1,8 +1,6 @@
-import { Post } from '@/components/Post';
 import { auth } from '@/util/auth';
 import { cookies } from 'next/headers';
 import React from 'react';
-import Link from "next/link";
 import { Notandi } from '@/components/Notandi';
 import Login from '@/components/Login';
 export default async function Home() {

@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { cookies } from 'next/headers'
 import { Notandi } from "@/components/Notandi";
