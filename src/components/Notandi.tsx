@@ -7,22 +7,17 @@ import Image from "next/image";
 
 export function Notandi({ id, token }: { id: string, token: string }) {
 	const [refresh, setRefresh] = useState(0);
-	const { isLoading, error, data } = useFetch<notandi>(`${process.env.NEXT_PUBLIC_API_URL}/users/${id}?refresh=${refresh}`);
+	const { isLoading, error, data } = useFetch<notandi>(`${process.env.NEXT_PUBLIC_API_URL}users/${id}?refresh=${refresh}`);
 	const [group, setGroup] = useState('')
 	const [avatarUrl, setAvatarUrl] = useState('');
 
 	const updateUserProfile = () => {
-		// Increment the refresh state to trigger a re-fetch of the user data
 		setRefresh(refresh + 1);
 	};
 
 	useEffect(() => {
 		if (data?.avatar) {
-			fetch(`/api/avatar`, {
-				method: "POST",
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ avatar: data.avatar })
-			})
+			fetch(`/api/avatar?avatar=${data.avatar}`)
 				.then(response => response.json())
 				.then(data => setAvatarUrl(data.avatarUrl))
 				.catch(err => console.error(err));
@@ -35,7 +30,7 @@ export function Notandi({ id, token }: { id: string, token: string }) {
 		<p>Villa við að sækja gögn, vinsamlegast reynið aftur</p>
 	</div>
 	if (data) {
-		Number(data.group_id) && fetch(`${process.env.NEXT_PUBLIC_API_URL}/groups/${data.group_id}`,
+		Number(data.group_id) && fetch(`${process.env.NEXT_PUBLIC_API_URL}groups/${data.group_id}`,
 			{
 				method: 'GET'
 			}

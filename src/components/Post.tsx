@@ -25,7 +25,7 @@ export function Post({ type, token, id }: { type: 'users' | 'groups' | 'projects
 			data = b64hex(data as notandi)
 		}
 		try {
-			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${type}`,
+			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${type}`,
 				{
 					method: 'POST',
 					headers: {

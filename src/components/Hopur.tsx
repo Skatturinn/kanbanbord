@@ -3,7 +3,7 @@ import { group } from "@/types/types";
 import useFetch from "react-fetch-hook";
 
 export function Hopur({ id, token }: { id: string, token: string }) {
-	const { isLoading, error, data } = useFetch<group>(`${process.env.NEXT_PUBLIC_API_URL}/groups/${id}`);
+	const { isLoading, error, data } = useFetch<group>(`${process.env.NEXT_PUBLIC_API_URL}groups/${id}`);
 
 	if (isLoading) return <p className="loading">Sæki gögn</p>
 	if (error) return <div>

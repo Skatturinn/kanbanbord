@@ -13,8 +13,7 @@ export default async function Home() {
 	const id = hnetur.get('id')
 	if (token?.value && id?.value) {
 		let a = await auth(token.value)
-		if (a.isAdmin) return <div>
-
+		if (a.admin) return <div>
 			<section>
 				<h1>Búa til:</h1>
 				<h2>Notendur</h2>
@@ -44,8 +43,8 @@ export default async function Home() {
 				<Delete token={token.value} />
 			</section>
 		</div>
-		if (!a.isAdmin && a.login) return <p>Ert ekki innskráður sem admin notandi.</p>
-		if (!a.isAdmin && !a.login) return <p>{JSON.stringify(a?.message)}</p>
+		if (!a.admin && a.login) return <p>Ert ekki innskráður sem admin notandi.</p>
+		if (!a.admin && !a.login) return <p>{JSON.stringify(a?.message)}</p>
 	}
 	return <div>
 		<p>Þú ert ekki innskráður</p>

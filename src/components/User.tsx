@@ -28,7 +28,7 @@ export default function User({ id, token }: UserType) {
 		let allProjects: Project[] = [];
 
 		for (let page = 1; page <= 2; page++) {
-			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects?group_id=${group}&page=${page}`, {
+			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}projects?group_id=${group}&page=${page}`, {
 				headers: {
 					'Authorization': `Bearer ${authToken}`
 				},
@@ -47,7 +47,7 @@ export default function User({ id, token }: UserType) {
 	useEffect(() => {
 		const fetchUser = async () => {
 			if (id) {
-				const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${id}`);
+				const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}users/${id}`);
 				const data: UserType = await response.json();
 				setGroup({ id: data.group_id });
 			}

@@ -4,10 +4,8 @@ import { group, notandi, project } from "@/types/types";
 import styles from './Admin.module.scss';
 
 export function UsersComponent({ token }: { token: string }) {
-
 	const [usersPage, setUsersPage] = useState(1);
 	const [users, setUsers] = useState<notandi[] | undefined>();
-	const [totalUsers, setTotalUsers] = useState(0);
 	const [isHydrated, setIsHydrated] = useState(false);
 
 	const handleLoadPrevious = () => {
@@ -20,15 +18,13 @@ export function UsersComponent({ token }: { token: string }) {
 
 	const fetchData = useCallback(async () => {
 		if (token !== undefined) {
-			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users?page=${usersPage}`,
-				{
-					method: 'GET',
-					headers: {
-						'Content-Type': 'application/json',
-						'Authorization': `Bearer ${token}`
-					}
+			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}users?page=${usersPage}`, {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${token}`
 				}
-			)
+			});
 			const info = await response.json();
 			setUsers(info);
 		}
@@ -42,14 +38,12 @@ export function UsersComponent({ token }: { token: string }) {
 		setIsHydrated(true);
 	}, []);
 
-
-
 	return (
 		<section className={styles.container}>
 			<h2><a href="/Notandi/Admin/users">Users</a> page: {usersPage}</h2>
-			{isHydrated && token?.valueOf() ?
+			{isHydrated && users && users.length > 0 ? (
 				<ul>
-					{users?.map(user => (
+					{users.map(user => (
 						<li key={user.id} className={styles.user}>
 							<a href={`/Notandi/Admin/users/${user.id}`}>
 								<h3>{user.username}</h3>
@@ -59,20 +53,19 @@ export function UsersComponent({ token }: { token: string }) {
 						</li>
 					))}
 				</ul>
-				:
-				<p>Loading...</p>
-			}
+			) : (
+				<p>No users found or still loading...</p>
+			)}
 			<button onClick={handleLoadPrevious}>Previous</button>
 			<button onClick={handleLoadMore}>Next</button>
 		</section>
 	)
 }
 
-export function GroupsComponent({ token }: { token: string }) {
 
+export function GroupsComponent({ token }: { token: string }) {
 	const [groupsPage, setGroupsPage] = useState(1);
 	const [groups, setGroups] = useState<group[] | undefined>();
-	const [totalGroups, setTotalGroups] = useState(0);
 	const [isHydrated, setIsHydrated] = useState(false);
 
 	const handleLoadPrevious = () => {
@@ -85,15 +78,13 @@ export function GroupsComponent({ token }: { token: string }) {
 
 	const fetchData = useCallback(async () => {
 		if (token !== undefined) {
-			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/groups?page=${groupsPage}`,
-				{
-					method: 'GET',
-					headers: {
-						'Content-Type': 'application/json',
-						'Authorization': `Bearer ${token}`
-					}
+			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}groups?page=${groupsPage}`, {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${token}`
 				}
-			)
+			});
 			const info = await response.json();
 			setGroups(info);
 		}
@@ -110,9 +101,9 @@ export function GroupsComponent({ token }: { token: string }) {
 	return (
 		<section className={styles.container}>
 			<h2><a href="/Notandi/Admin/groups">Groups</a> page: {groupsPage}</h2>
-			{isHydrated && token?.valueOf() ?
+			{isHydrated && groups && groups.length > 0 ? (
 				<ul>
-					{groups?.map(group => (
+					{groups.map(group => (
 						<li key={group.id} className={styles.user}>
 							<a href={`/Notandi/Admin/groups/${group.id}`}>
 								<h3>{group.name}</h3>
@@ -121,37 +112,20 @@ export function GroupsComponent({ token }: { token: string }) {
 						</li>
 					))}
 				</ul>
-				:
-				<p>Loading...</p>
-			}
+			) : (
+				<p>No groups found or still loading...</p>
+			)}
 			<button onClick={handleLoadPrevious}>Previous</button>
 			<button onClick={handleLoadMore}>Next</button>
 		</section>
 	)
 }
 
-export function ProjectsComponent({ token }: { token: string }) {
 
+export function ProjectsComponent({ token }: { token: string }) {
 	const [projectsPage, setProjectsPage] = useState(1);
 	const [projects, setProjects] = useState<project[] | undefined>();
-	const [totalProjects, setTotalProjects] = useState(0);
 	const [isHydrated, setIsHydrated] = useState(false);
-
-	const fetchData = useCallback(async () => {
-		if (token !== undefined) {
-			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects?page=${projectsPage}`,
-				{
-					method: 'GET',
-					headers: {
-						'Content-Type': 'application/json',
-						'Authorization': `Bearer ${token}`
-					}
-				}
-			)
-			const info = await response.json();
-			setProjects(info);
-		}
-	}, [token, projectsPage]);
 
 	const handleLoadPrevious = () => {
 		setProjectsPage(prevPage => prevPage > 1 ? prevPage - 1 : 1);
@@ -160,6 +134,20 @@ export function ProjectsComponent({ token }: { token: string }) {
 	const handleLoadMore = () => {
 		setProjectsPage(prevPage => prevPage + 1);
 	}
+
+	const fetchData = useCallback(async () => {
+		if (token !== undefined) {
+			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}projects?page=${projectsPage}`, {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${token}`
+				}
+			});
+			const info = await response.json();
+			setProjects(info);
+		}
+	}, [token, projectsPage]);
 
 	useEffect(() => {
 		fetchData();
@@ -172,11 +160,11 @@ export function ProjectsComponent({ token }: { token: string }) {
 	return (
 		<section className={styles.container}>
 			<h2><a href="/Notandi/Admin/projects">Projects</a> page: {projectsPage}</h2>
-			{isHydrated && token?.valueOf() ?
+			{isHydrated && projects && projects.length > 0 ? (
 				<ul>
-					{projects?.map(project => (
-						<li key={project?.id} className={styles.user}>
-							<a href={`/Notandi/Admin/users/${project?.id}`}>
+					{projects.map(project => (
+						<li key={project.id} className={styles.user}>
+							<a href={`/Notandi/Admin/projects/${project.id}`}>
 								<h3>{project.title}</h3>
 								<p>Status: {project.status}</p>
 								<p>Description: {project.description}</p>
@@ -184,9 +172,9 @@ export function ProjectsComponent({ token }: { token: string }) {
 						</li>
 					))}
 				</ul>
-				:
-				<p>Loading...</p>
-			}
+			) : (
+				<p>No projects found or still loading...</p>
+			)}
 			<button onClick={handleLoadPrevious}>Previous</button>
 			<button onClick={handleLoadMore}>Next</button>
 		</section>

@@ -32,15 +32,15 @@ export function Patch({ type: initialType, token }: { type: 'users' | 'groups' |
             }
         };
 
-        fetchData(`${process.env.NEXT_PUBLIC_API_URL}/users`, (data) => {
+        fetchData(`${process.env.NEXT_PUBLIC_API_URL}users`, (data) => {
             setUser(data);
             if (initialType === 'users') setSelectedId(data[0]?.id);
         });
-        fetchData(`${process.env.NEXT_PUBLIC_API_URL}/groups`, (data) => {
+        fetchData(`${process.env.NEXT_PUBLIC_API_URL}groups`, (data) => {
             setGroups(data);
             if (initialType === 'groups') setSelectedId(data[0]?.id);
         });
-        fetchData(`${process.env.NEXT_PUBLIC_API_URL}/projects`, (data) => {
+        fetchData(`${process.env.NEXT_PUBLIC_API_URL}projects`, (data) => {
             setProjects(data);
             if (initialType === 'projects') setSelectedId(data[0]?.id);
         });
@@ -58,7 +58,7 @@ export function Patch({ type: initialType, token }: { type: 'users' | 'groups' |
         }
         console.log(filteredData);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${type}/${selectedId}`,
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${type}/${selectedId}`,
                 {
                     method: 'PATCH',
                     headers: {

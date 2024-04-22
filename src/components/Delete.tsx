@@ -26,14 +26,14 @@ export function Delete({ token }: { token: string }) {
     }, [token]);
 
     useEffect(() => {
-        fetchData(`${process.env.NEXT_PUBLIC_API_URL}/users`, setUsers);
-        fetchData(`${process.env.NEXT_PUBLIC_API_URL}/groups`, setGroups);
-        fetchData(`${process.env.NEXT_PUBLIC_API_URL}/projects`, setProjects);
+        fetchData(`${process.env.NEXT_PUBLIC_API_URL}users`, setUsers);
+        fetchData(`${process.env.NEXT_PUBLIC_API_URL}groups`, setGroups);
+        fetchData(`${process.env.NEXT_PUBLIC_API_URL}projects`, setProjects);
     }, [fetchData]);
 
 
     const deleteItem = async (type: string, id: string) => {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${type}/${id}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${type}/${id}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -42,13 +42,13 @@ export function Delete({ token }: { token: string }) {
 
         if (response.ok) {
             if (type === 'users') {
-                fetchData(`${process.env.NEXT_PUBLIC_API_URL}/users`, setUsers);
+                fetchData(`${process.env.NEXT_PUBLIC_API_URL}users`, setUsers);
                 setSelectedUser('');
             } else if (type === 'groups') {
-                fetchData(`${process.env.NEXT_PUBLIC_API_URL}/groups`, setGroups);
+                fetchData(`${process.env.NEXT_PUBLIC_API_URL}groups`, setGroups);
                 setSelectedGroup('');
             } else if (type === 'projects') {
-                fetchData(`${process.env.NEXT_PUBLIC_API_URL}/projects`, setProjects);
+                fetchData(`${process.env.NEXT_PUBLIC_API_URL}projects`, setProjects);
                 setSelectedProject('');
             }
         } else {

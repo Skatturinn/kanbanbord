@@ -14,7 +14,7 @@ export default async function Page({ params }: { params: { slug: Array<string> }
 
 	if (token?.value) {
 		let a = await auth(token.value)
-		if (a.isAdmin && a.login) {
+		if (a.admin && a.login) {
 			if (slug.length === 1) {
 				if (slug0 === 'groups') return <GroupsComponent token={token?.value} />
 				if (slug0 === 'projects') return <ProjectsComponent token={token?.value} />

@@ -36,7 +36,7 @@ function Login() {
 					router.push('/Notandi/Admin');
 					return
 				} else {
-					router.push('/Notandi/User');
+					router.push('/Notandi');
 					return
 				}
 			}

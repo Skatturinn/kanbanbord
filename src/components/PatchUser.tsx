@@ -16,7 +16,7 @@ export function PatchUser({ type: initialType, token, id, onSuccess }: { type: '
             data = b64hex(data as notandi)
         }
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${type}/${id}`,
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${type}/${id}`,
                 {
                     method: 'PATCH',
                     headers: {

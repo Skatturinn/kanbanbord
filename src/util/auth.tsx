@@ -1,19 +1,23 @@
-import { NextResponse } from "next/server"
-import useFetch from "react-fetch-hook";
+export async function auth(token: string, path = 'authenticate') {
+	const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+	console.log("Making request to:", apiUrl + path);
+	const response = await fetch(`${apiUrl}${path}`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': `Bearer ${token}`
+		},
+		body: JSON.stringify({ token })
+	});
 
-export async function auth(token: string, path = '/api/authenticate') {
-	const deployedUrl = process.env.VERCEL_URL || 'http://localhost:3000';
-	const response = await fetch(deployedUrl + '/api/authenticate',
-		{
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ token })
-		}
-	)
+	console.log("Response status:", response.status);
 	if (response.ok) {
-		const data = await response.json() as { login?: boolean, isAdmin?: boolean, message?: string }
-		return data
+		const data = await response.json() as { login?: boolean, admin?: boolean, message?: string };
+		console.log("Response data:", data);
+		return data;
 	} else {
+		const errorData = await response.text();
+		console.error("Failed response data:", errorData);
 		throw new Error(`HTTP error! status: ${response.status}`);
 	}
 }
