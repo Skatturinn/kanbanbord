@@ -16,7 +16,6 @@ export function LoginButton({ className }: { className?: string }) {
 
 function Login() {
 	const { register, handleSubmit, control, formState: { errors } } = useForm<FormData>();
-	const router = useRouter();
 	const [error, setError] = useState('')
 	const [wait, setWait] = useState(false)
 	const onSubmit = async ({ username, password }: FormData) => {
@@ -29,16 +28,10 @@ function Login() {
 					body: JSON.stringify({ username, password })
 				}
 			)
-			console.log(response)
 			const data = await response.json()
-			console.log(data)
 			setWait(false)
 			if (data.login) {
-				if (data.isAdmin) {
-					router.push('/Notandi/Admin');
-				} else {
-					router.push('/Kanbanbord');
-				}
+				setError('Innskráning tókst')
 			} else {
 				setError(`${response.status >= 300}: ${response.statusText} ${data && (data?.error || JSON.stringify(data))}`)
 			}
