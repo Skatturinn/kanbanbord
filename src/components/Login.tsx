@@ -20,6 +20,7 @@ function Login() {
 	const [error, setError] = useState('')
 	const [wait, setWait] = useState(false)
 	const onSubmit = async ({ username, password }: FormData) => {
+		console.log(username, password)
 		try {
 			setWait(true)
 			const response = await fetch('/api/login',
@@ -29,7 +30,9 @@ function Login() {
 					body: JSON.stringify({ username, password })
 				}
 			)
+			console.log(response)
 			const data = await response.json()
+			console.log(data)
 			setWait(false)
 			if (data.login) {
 				if (data.isAdmin) {

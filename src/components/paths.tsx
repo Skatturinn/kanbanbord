@@ -7,7 +7,6 @@ import styles from "./Paths.module.scss"
 
 export default function Paths({ files, image }: { files: Array<string | null>, image: PathString | undefined }) {
 	const pathname = usePathname();
-	console.log(pathname)
 	const isCurrent = (href: string): string => {
 		return pathname && pathname.split('/').includes(href) ? 'active' : 'ekki';
 	}
