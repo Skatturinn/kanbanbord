@@ -49,15 +49,17 @@ export function UsersComponent({ token }: { token: string }) {
 			<h2><a href="/Notandi/Admin/users">Users</a> page: {usersPage}</h2>
 			{isHydrated && token?.valueOf() ?
 				<ul>
-					{users?.map(user => (
-						<li key={user.id} className={styles.user}>
-							<a href={`/Notandi/Admin/users/${user.id}`}>
-								<h3>{user.username}</h3>
-								<p>Admin: {user.isadmin ? 'Yes' : 'No'}</p>
-								<p>Group ID: {user.group_id}</p>
-							</a>
-						</li>
-					))}
+					{
+						users && users.length ?
+							users?.map(user => (
+								<li key={user.id} className={styles.user}>
+									<a href={`/Notandi/Admin/users/${user.id}`}>
+										<h3>{user.username}</h3>
+										<p>Admin: {user.isadmin ? 'Yes' : 'No'}</p>
+										<p>Group ID: {user.group_id}</p>
+									</a>
+								</li>
+							)) : <p>Engir fleiri notendur farðu til baka.</p>}
 				</ul>
 				:
 				<p>Loading...</p>
@@ -114,14 +116,14 @@ export function GroupsComponent({ token }: { token: string }) {
 			<h2><a href="/Notandi/Admin/groups">Groups</a> page: {groupsPage}</h2>
 			{isHydrated && token?.valueOf() ?
 				<ul>
-					{groups?.map(group => (
+					{groups && groups.length ? groups?.map(group => (
 						<li key={group.id} className={styles.user}>
 							<a href={`/Notandi/Admin/groups/${group.id}`}>
 								<h3>{group.name}</h3>
 								<p>Admin ID: {group.admin_id}</p>
 							</a>
 						</li>
-					))}
+					)) : <p>Engir fleiri hópar farðu til baka</p>}
 				</ul>
 				:
 				<p>Loading...</p>
@@ -178,7 +180,7 @@ export function ProjectsComponent({ token }: { token: string }) {
 			<h2><a href="/Notandi/Admin/projects">Projects</a> page: {projectsPage}</h2>
 			{isHydrated && token?.valueOf() ?
 				<ul>
-					{projects?.map(project => (
+					{projects && projects.length ? projects?.map(project => (
 						<li key={project?.id} className={styles.user}>
 							<a href={`/Notandi/Admin/projects/${project?.id}`}>
 								<h3>{project.title}</h3>
@@ -186,7 +188,7 @@ export function ProjectsComponent({ token }: { token: string }) {
 								<p>Description: {project.description}</p>
 							</a>
 						</li>
-					))}
+					)) : <p>Enginn fleiri verkefni farðu til baka</p>}
 				</ul>
 				:
 				<p>Loading...</p>
