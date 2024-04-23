@@ -5,6 +5,7 @@ import { Notandi } from "@/components/Notandi";
 import { Verkefni } from "@/components/Verkefni";
 import { Hopur } from "@/components/Hopur";
 import { auth } from "@/util/auth";
+import Reyndu from "@/components/Reyndu";
 
 export default async function Page({ params }: { params: { slug: Array<string> } }) {
 	const hnetur = cookies();
@@ -30,6 +31,11 @@ export default async function Page({ params }: { params: { slug: Array<string> }
 				<p>{slug} gaf ekki gild niðurstöður athugið hlekk</p>
 			</div>
 		}
+		if (a.login && !a.admin) return <div>
+			<p>Þú ert ekki innskráður Admin notandi</p>
+			<Link href="/Notandi/Login">Login</Link>
+		</div>
+		if (!a.login && !a.admin) return <Reyndu />
 	}
 	return <div>
 		<p>Þú ert ekki innskráður notandi</p>

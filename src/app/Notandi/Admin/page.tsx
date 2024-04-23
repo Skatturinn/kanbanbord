@@ -6,6 +6,7 @@ import { cookies } from 'next/headers';
 import { Delete } from '@/components/Delete';
 import React from 'react';
 import Link from "next/link";
+import Reyndu from '@/components/Reyndu';
 
 export default async function Home() {
 	const hnetur = cookies();
@@ -43,9 +44,8 @@ export default async function Home() {
 				<Delete token={token.value} />
 			</section>
 		</div>
-		if (!a.admin && a.login) return <><p>Ert ekki innskráður sem admin notandi.		</p>
-			<p>Ef þetta er villa prófaðu að endursækja síðuna</p></>
-		if (!a.admin && !a.login) return <p>{JSON.stringify(a?.message)}</p>
+		if (!a.admin && a.login) return <><p>Ert ekki innskráður sem admin notandi.	</p></>
+		if (!a.admin && !a.login) return <Reyndu />
 	}
 	return <div>
 		<p>Þú ert ekki innskráður</p>
