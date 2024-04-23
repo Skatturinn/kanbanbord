@@ -1,8 +1,20 @@
 .user {
-	background-color: #A9A9A9;
+	background-color: #454545;
 	width: fit-content;
 	border-radius: 1em;
-	padding: 1em;
+	padding: 1.25em;
+
+	a {
+		filter: drop-shadow(10px 30px 50px #000000);
+		height: 100%;
+		width: 100%;
+	}
+
+
+	&:hover {
+		width: 100% !important;
+		padding: 1.5em;
+	}
 }
 
 .container {

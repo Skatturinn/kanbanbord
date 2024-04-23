@@ -176,7 +176,7 @@ export function ProjectsComponent({ token }: { token: string }) {
 				<ul>
 					{projects?.map(project => (
 						<li key={project?.id} className={styles.user}>
-							<a href={`/Notandi/Admin/users/${project?.id}`}>
+							<a href={`/Notandi/Admin/projects/${project?.id}`}>
 								<h3>{project.title}</h3>
 								<p>Status: {project.status}</p>
 								<p>Description: {project.description}</p>
