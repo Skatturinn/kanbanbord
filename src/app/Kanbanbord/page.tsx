@@ -15,10 +15,10 @@ export default async function Home() {
 			<h2>Þín Verkefni</h2>
 			<User token={token.value} id={id.value} />
 		</div>
-		return <>
+		return <div>
 			<h1>Þetta er kanbansíða</h1>
 			<Reyndu />
-		</>
+		</div>
 
 	}
 	return (
