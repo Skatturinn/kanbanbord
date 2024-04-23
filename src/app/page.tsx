@@ -1,6 +1,7 @@
 import Image from "next/image";
 import styles from "./page.module.css";
 import Link from "next/link";
+import { LoginButton } from "@/components/Login";
 
 export default function Home() {
 
@@ -8,7 +9,7 @@ export default function Home() {
 		<div className={styles.main}>
 			<h1>Þetta er heimasíðan</h1>
 			<p>Hún er opin öllum, til að nota kanbanborð þarftu að skrá þig inn</p>
-			<Link href="/Notandi/Login">Login</Link>
+			<LoginButton />
 			<Image
 				src={'https://plus.unsplash.com/premium_photo-1661681726667-1dc005655ade?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8a2FuYmFufGVufDB8fDB8fHww'}
 				alt="kanban mynd"
