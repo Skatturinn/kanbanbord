@@ -5,11 +5,9 @@ $litur4: #a9edf1;
 $litur5: #74ed4b;
 
 .projectContainer {
-	display: grid;
 	grid-template-columns: repeat(5, 1fr);
 	gap: 10px;
 	flex-direction: row !important; // Override the inherited property
-
 }
 
 .projectColumn {
