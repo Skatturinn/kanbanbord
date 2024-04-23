@@ -30,7 +30,7 @@ export default async function RootLayout({
 				</header>
 				<main className={styles.main}>{children}</main>
 				<footer className={styles.footer}>
-					<div>
+					<div className={styles.log}>
 						<LoginButton className={styles.loginButton} />
 						<Logout />
 					</div>
