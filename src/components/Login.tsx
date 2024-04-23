@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { useForm } from "react-hook-form";
 import { useRouter } from 'next/navigation';
 import styles from './Login.module.scss';
-import { response } from 'express';
 
 export type FormData = {
 	username: string;

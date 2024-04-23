@@ -1,7 +1,5 @@
-import { NextResponse } from "next/server"
-import useFetch from "react-fetch-hook";
 
-export async function auth(token: string, path = '/api/authenticate') {
+export async function auth(token: string) {
 	const response = await fetch(process.env.NEXT_PUBLIC_API_URL + '/authenticate',
 		{
 			method: 'POST',

@@ -1,5 +1,4 @@
 import { notandi } from "@/types/types";
-import { filterEmptyStrings } from "./filterempty";
 
 export function b64hex(data: notandi) {
 	let a = data as notandi

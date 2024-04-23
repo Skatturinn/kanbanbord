@@ -1,10 +1,8 @@
 'use client'
-import { Form, useForm } from "react-hook-form";
-import useFetch from 'react-fetch-hook';
+import { useForm } from "react-hook-form";
 import { group, notandi, project } from "@/types/types";
 import { useState } from "react";
 import styles from "./Post.module.scss";
-import { Placeholder } from "react-select/animated";
 import { b64hex } from "@/util/breytamynd";
 import { filterEmptyStrings } from "@/util/filterempty";
 

@@ -1,6 +1,4 @@
-import Login from "./Login";
-
-
+import Link from "next/link";
 
 export default function Reyndu() {
 	return <div>
@@ -10,6 +8,6 @@ export default function Reyndu() {
 			<li>Bíða aðeins og endursækja síðuna</li>
 			<li>Skrá þig inn aftur</li>
 		</ol>
-		<Login />
+		<Link href="/Notandi/Login">Login</Link>
 	</div>
 }
