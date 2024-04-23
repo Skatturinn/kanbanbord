@@ -16,19 +16,6 @@ export function Notandi({ id, token }: { id: string, token: string }) {
 		setRefresh(refresh + 1);
 	};
 
-	useEffect(() => {
-		if (data?.avatar) {
-			fetch(`/api/avatar`, {
-				method: "POST",
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ avatar: data.avatar })
-			})
-				.then(response => response.json())
-				.then(data => setAvatarUrl(data.avatarUrl))
-				.catch(err => console.error(err));
-		}
-	}, [data?.avatar]);
-
 	if (isLoading) return <p className="loading">Sæki gögn</p>
 	if (error) return <div>
 		<p>{error.message}</p>
@@ -45,7 +32,8 @@ export function Notandi({ id, token }: { id: string, token: string }) {
 				))
 		return <>
 			<div>
-				{avatarUrl ? <Image src={avatarUrl} alt="Avatar" width={75} height={75} /> : ''}
+				{data?.avatar ? <Image src={data?.avatar} alt="Avatar" width={75} height={75} /> :
+					<p>Til að bæta við mynd vinsamlegast settu hana inn í formið.</p>}
 				<h1>{data.username}</h1>
 				<p>{'Hópur: ' + group}</p>
 				<p>{'admin: ' + data.isadmin}</p>

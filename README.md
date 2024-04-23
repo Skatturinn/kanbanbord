@@ -1,6 +1,24 @@
-# Vefforritun 2, 2024, hópverkefni 2
+# Vefforritun 2, 2024, hópverkefni 2 Kanban borð
 
-Útfæra skal React framenda með Next.js ofan á vefþjónustur úr hópverkefni 1.
+Í rót verkefnis skal vera `README.md` skjal sem tilgreinir:
+
+## Upplýsingar um hvernig setja skuli upp verkefnið.
+Í rót verkefnis þarf að keyra 
+```
+	npm install
+	npm run dev
+```
+Þá er síðan hýst á localhost:3000
+## Admin aðgangu
+
+Notendanafn: admin
+Lykilorð: admin123
+
+## Nöfn og notendanöfn allra í hóp.
+
+Arnar Eyðunsson Simonsen: @AddiSim, aes53@hi.is
+
+Elías Lúðvíksson: @Skatturinn, ell9@hi.is
 
 ## Virkni
 

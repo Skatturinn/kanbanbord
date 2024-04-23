@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
 	const { username, password } = await req.json()
+	console.log(username, password)
 	const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login`,
 		{
 			method: 'POST',
@@ -11,6 +12,7 @@ export async function POST(req: NextRequest) {
 			body: JSON.stringify({ username, password })
 		}
 	)
+	console.log(response.statusText)
 	const data = await response.json()
 	if (response.status >= 200 && response.status < 300 && data.token && data.id) {
 		cookies().set('token', data.token);
