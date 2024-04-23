@@ -62,8 +62,10 @@ export function UsersComponent({ token }: { token: string }) {
 				:
 				<p>Loading...</p>
 			}
-			<button onClick={handleLoadPrevious}>Previous</button>
-			<button onClick={handleLoadMore}>Next</button>
+			<div className={styles.takkar}>
+				<button onClick={handleLoadPrevious}>Previous</button>
+				<button onClick={handleLoadMore}>Next</button>
+			</div>
 		</section>
 	)
 }
@@ -124,8 +126,10 @@ export function GroupsComponent({ token }: { token: string }) {
 				:
 				<p>Loading...</p>
 			}
-			<button onClick={handleLoadPrevious}>Previous</button>
-			<button onClick={handleLoadMore}>Next</button>
+			<div className={styles.takkar}>
+				<button onClick={handleLoadPrevious}>Previous</button>
+				<button onClick={handleLoadMore}>Next</button>
+			</div>
 		</section>
 	)
 }
@@ -187,8 +191,10 @@ export function ProjectsComponent({ token }: { token: string }) {
 				:
 				<p>Loading...</p>
 			}
-			<button onClick={handleLoadPrevious}>Previous</button>
-			<button onClick={handleLoadMore}>Next</button>
+			<div className={styles.takkar}>
+				<button onClick={handleLoadPrevious}>Previous</button>
+				<button onClick={handleLoadMore}>Next</button>
+			</div>
 		</section>
 	)
 }

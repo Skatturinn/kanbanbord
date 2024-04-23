@@ -5,6 +5,7 @@
 	justify-content: space-evenly;
 	list-style: none;
 	margin: 1em 0;
+	word-break: keep-all;
 
 	li:nth-child(n),
 	li:nth-child(n) {
@@ -14,8 +15,10 @@
 		font-size: large;
 		filter: drop-shadow(10px 30px 50px #000000);
 
+
 		a {
 			background-color: transparent;
+			margin: 0 0 0 -0.5em;
 		}
 	}
 

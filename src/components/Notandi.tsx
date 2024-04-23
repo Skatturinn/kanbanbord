@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { PatchUser } from "./PatchUser";
 import useFetch from "react-fetch-hook";
 import Image from "next/image";
+import styles from "./Notandi.module.scss"
 
 export function Notandi({ id, token }: { id: string, token: string }) {
 	const [refresh, setRefresh] = useState(0);
@@ -41,12 +42,16 @@ export function Notandi({ id, token }: { id: string, token: string }) {
 				response.json().then(group => setGroup(group?.name)
 				))
 		return <>
-			<div>
-				{data?.avatar ? <Image src={data?.avatar} alt="Avatar" width={75} height={75} /> :
-					<p>Til að bæta við mynd vinsamlegast settu hana inn í formið.</p>}
-				<h1>{data.username}</h1>
-				<p>{'Hópur: ' + group}</p>
-				<p>{'admin: ' + data.isadmin}</p>
+			<div className={styles.notandi}>
+				<div className={styles.mynd}>
+					{data?.avatar ? <Image src={data?.avatar} alt="Avatar" width={75} height={75} /> :
+						<p>Til að bæta við mynd vinsamlegast settu hana inn í formið.</p>}
+				</div>
+				<div className="styles.uppl">
+					<h1>{data.username}</h1>
+					<p>{`Hópur ${data.group_id}: ${group}`}</p>
+					<p>{'admin: ' + data.isadmin}</p>
+				</div>
 			</div>
 			<h1>Breyta Aðgangi</h1>
 			<PatchUser type='users' token={token} id={id} onSuccess={updateUserProfile} />

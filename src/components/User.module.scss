@@ -1,20 +1,60 @@
+$litur1: #f1f58f;
+$litur2: #ffa930;
+$litur3: #ff32b2;
+$litur4: #a9edf1;
+$litur5: #74ed4b;
+
 .projectContainer {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 10px;
-    flex-direction: row !important; // Override the inherited property
+	display: grid;
+	grid-template-columns: repeat(5, 1fr);
+	gap: 10px;
+	flex-direction: row !important; // Override the inherited property
+
 }
 
 .projectColumn {
-    background-color: #ff6b6b;
-    border-radius: 5px;
-    padding: 10px;
+	border-radius: 5px;
+	padding: 10px;
+
+	h2 {
+		// background-color: rgb(75, 75, 75);
+		border-radius: 5px;
+		padding: 10px;
+		border-bottom: 1px solid black;
+		color: black;
+	}
+
+	&:nth-child(n) {
+		background-color: rgb(213, 213, 213);
+		border-radius: 5px;
+		padding: 10px;
+	}
+
+	&:nth-child(1) {
+		background-color: $litur1;
+	}
+
+	&:nth-child(2) {
+		background-color: $litur2;
+	}
+
+	&:nth-child(3) {
+		background-color: $litur3;
+	}
+
+	&:nth-child(4) {
+		background-color: $litur4;
+	}
+
+	&:nth-child(5) {
+		background-color: $litur5;
+	}
 }
 
 .projectCard {
-    background-color: #ffffff;
-    border-radius: 5px;
-    padding: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    color: rgb(0, 204, 255);
+	background-color: #ffffff;
+	border-radius: 5px;
+	padding: 10px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	color: black;
 }

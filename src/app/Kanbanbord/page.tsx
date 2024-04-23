@@ -14,7 +14,16 @@ export default async function Home() {
 			<h2>Þín Verkefni</h2>
 			<User token={token.value} id={id.value} />
 		</div>
-		return <p>Ekki tókst að sannreyna innskráningu þína, vinsamlegast endursæktu síðuna eða skráðu þig inn aftur</p>
+		return <div>
+			<h1>Þetta er kanbansíða</h1>
+			<p>Ekki tókst að sannreyna innskráningu þína</p>
+			<p>Þú getur prófað að:</p>
+			<ol>
+				<li>Bíða aðeins og endursækja síðuna</li>
+				<li>Skrá þig inn aftur</li>
+			</ol>
+			<Link href="/Notandi/Login">Login</Link>
+		</div>
 
 	}
 	return (
