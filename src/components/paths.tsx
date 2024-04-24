@@ -20,7 +20,7 @@ export default function Paths({ files, image }: { files: Array<string | null>, i
 		ind[0] !== index && setIndex(ind[0])
 		test = false
 	}
-	console.log(pathname, p)
+	console.log(pathname, p, ind)
 	const active = p.map(stak => stak && isCurrent(stak[4]));
 	const stada = active.some(stak => stak);
 	return <nav>
