@@ -7,8 +7,8 @@ export function Hopur({ id, token }: { id: string, token: string }) {
 
 	if (isLoading) return <p className="loading">Sæki gögn</p>
 	if (error) return <div>
-		<p>{error.message}</p>
-		<p>Villa við að sækja gögn, vinsamlegast reynið aftur</p>
+		<p>{(error.status)}</p>
+		<p>Villa við að sækja gögn, hópur fannst ekki á skrá með id={id}, id þarf að vera heiltala stærri en 0</p>
 	</div>
 	return <>
 		<div >

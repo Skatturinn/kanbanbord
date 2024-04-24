@@ -10,7 +10,8 @@ export function Notandi({ id, token }: { id: string, token: string }) {
 	const [refresh, setRefresh] = useState(0);
 	const { isLoading, error, data } = useFetch<notandi>(`${process.env.NEXT_PUBLIC_API_URL}/users/${id}?refresh=${refresh}`);
 	const [group, setGroup] = useState('')
-	const [test, setTest] = useState(true)
+	const [message, setMessage] = useState('')
+	const [status, setStatus] = useState(200)
 
 	const [avatarUrl, setAvatarUrl] = useState('');
 
@@ -22,14 +23,18 @@ export function Notandi({ id, token }: { id: string, token: string }) {
 	if (isLoading) return <p className="loading">Sæki gögn</p>
 	if (error) {
 		fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${id}`)
-			.then(test => test.json()
-			).then(result => setTest(result?.error !== "notandi fannst ekki á skrá með id=8, id á að vera heiltala stærri en 0"))
+			.then(test => {
+				setStatus(test.status)
+				return test.json()
+			}
+			).then(result => setMessage(JSON.stringify(result)))
+		console.log(message)
 		// const result = await test.json();
-		return test ? <div>
-			<p>{error.message}</p>
-			<p>Villa við að sækja gögn, vinsamlegast reynið aftur</p>
+		return message ? <div>
+			<p>{status}</p>
+			<p>{message}</p>
 		</div> : <div>
-			<p>notandi fannst ekki á skrá með</p>
+			<p>error</p>
 		</div>
 	}
 	if (data) {
