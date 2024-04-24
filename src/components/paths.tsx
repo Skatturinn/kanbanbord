@@ -8,6 +8,7 @@ import { useState } from "react";
 
 let test = true;
 export default function Paths({ files, image }: { files: Array<string | null>, image: PathString | undefined }) {
+	console.log(files)
 	const pathname = usePathname();
 	const [index, setIndex] = useState(2)
 	const isCurrent = (href: string): string => {

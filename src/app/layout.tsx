@@ -22,6 +22,7 @@ export default async function RootLayout({
 	children: React.ReactNode;
 }>) {
 	const files = (await readFilesFromDir(`./src/app`))
+	console.log(files)
 	return (
 		<html lang="is">
 			<body className={inter.className}>
