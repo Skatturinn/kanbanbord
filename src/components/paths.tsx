@@ -17,9 +17,10 @@ export default function Paths({ files, image }: { files: Array<string | null>, i
 	const p = ff[0]?.includes('\\') ? ff.map(stak => stak?.split('\\')) : ff.map(stak => stak?.split('/'));
 	const ind = p.map(stak => stak?.indexOf(pathname.split('/')[1])).filter(v => Number(v) >= 0) as Array<number>
 	if (test) {
-		ind[0] !== index && setIndex(ind[0] || 2)
+		ind[0] !== index && setIndex(ind[0])
 		test = false
 	}
+	console.log(pathname, p)
 	const active = p.map(stak => stak && isCurrent(stak[4]));
 	const stada = active.some(stak => stak);
 	return <nav>
