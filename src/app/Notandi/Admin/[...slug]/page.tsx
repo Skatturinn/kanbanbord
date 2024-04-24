@@ -27,8 +27,9 @@ export default async function Page({ params }: { params: { slug: Array<string> }
 				if (slug0 === 'groups') return <Hopur id={slug[1]} token={token.value} />
 			}
 			return <div>
+				<p>404</p>
 				<p>Slóðin þarf að vera /Notandi/Admin/[users | groups | projects]/[id]</p>
-				<p>{slug} gaf ekki gild niðurstöður athugið hlekk</p>
+				<p>{slug} gaf ekki gilda niðurstöðu athugið hlekk</p>
 			</div>
 		}
 		if (a.login && !a.admin) return <div>
