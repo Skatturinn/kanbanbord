@@ -20,12 +20,12 @@ export default function Paths() {
 				</Link>
 			</li>
 			<li className={pathname === '/Kanbanbord' ? 'active' : 'ekki'}>
-				<Link href={'/'}>
+				<Link href={'/Kanbanbord'}>
 					Kanbanbord
 				</Link>
 			</li>
 			<li className={pathname === '/Notandi' ? 'active' : 'ekki'}>
-				<Link href={'/'}>
+				<Link href={'/Notandi'}>
 					Notandi
 				</Link>
 			</li>
