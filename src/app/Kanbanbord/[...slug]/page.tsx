@@ -18,7 +18,8 @@ export default async function Page({ params }: { params: { slug: Array<string> }
 		let a = await auth(token.value)
 		if (a.login) {
 			if (slug.length === 2 && Number(slug[1])) {
-				if (slug0 === 'projects') return <Verkefni id={slug[1]} token={token.value} />
+				if (slug0 === 'projects') return <><Verkefni id={slug[1]} token={token.value} />
+					<Link href={'/Kanbanbord'}>Til baka</Link></>
 			}
 			return <div>
 				<p>404</p>

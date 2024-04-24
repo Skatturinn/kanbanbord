@@ -3,7 +3,7 @@ import { project } from "@/types/types";
 import useFetch from "react-fetch-hook";
 
 export function Verkefni({ id, token }: { id: string, token: string }) {
-	const { isLoading, error, data } = useFetch<project>(`${process.env.NEXT_PUBLIC_API_URL}/groups/${id}`);
+	const { isLoading, error, data } = useFetch<project>(`${process.env.NEXT_PUBLIC_API_URL}/projects/${id}`);
 
 	if (isLoading) return <p className="loading">Sæki gögn</p>
 	if (error) return <div>
