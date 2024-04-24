@@ -119,7 +119,7 @@ export default function User({ id, token }: UserType) {
 						projects
 							.filter((project) => Number(project.status) === Number(status))
 							.map((project: Project) => (
-								<div key={project.id} className={styles.projectCard}>
+								<a key={project.id} href={`/Kanbanbord/projects/${project.id}`} className={styles.projectCard}>
 									<div>
 										<h3>{project.title}</h3>
 										<p>Status: {project.status}</p>
@@ -131,7 +131,7 @@ export default function User({ id, token }: UserType) {
 											))}
 										</select>
 									</div>
-								</div>
+								</a>
 							))
 					)}
 				</div>
