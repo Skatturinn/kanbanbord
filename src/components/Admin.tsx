@@ -67,7 +67,7 @@ export function UsersComponent({ token }: { token: string }) {
 									</li>
 								))
 							) : (
-								!isLoading ? <p>Engir fleiri notendur farðu til baka.</p> : <p>Sæki gögn...</p>
+								isLoading ? <p>Engir fleiri notendur farðu til baka.</p> : <p>Sæki gögn...</p>
 							)}
 						</ul>
 					)}
