@@ -7,6 +7,7 @@ import { Logout } from "@/components/Logout";
 import Link from "next/link";
 import NavBar from "@/components/NavBar";
 import { LoginButton } from "@/components/Login";
+import path from "path";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -21,8 +22,7 @@ export default async function RootLayout({
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
-	const files = (await readFilesFromDir(`./src/app`))
-	console.log(files)
+	const files = (await readFilesFromDir(path.join('src', 'app')))
 	return (
 		<html lang="is">
 			<body className={inter.className}>
