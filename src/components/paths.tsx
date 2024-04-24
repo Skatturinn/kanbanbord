@@ -7,21 +7,11 @@ import styles from "./Paths.module.scss"
 import { useState } from "react";
 
 let test = true;
-export default function Paths({ files, image }: { files: Array<string | null>, image: PathString | undefined }) {
+export default function Paths() {
 	const pathname = usePathname();
-	const [index, setIndex] = useState(2)
 	const isCurrent = (href: string): string => {
 		return pathname && pathname.split('/').includes(href) ? 'active' : 'ekki';
 	}
-	const ff = files.filter(e => e);
-	const p = ff[0]?.includes('\\') ? ff.map(stak => stak?.split('\\')) : ff.map(stak => stak?.split('/'));
-	const ind = p.map(stak => stak?.indexOf(pathname.split('/')[1])).filter(v => Number(v) >= 0) as Array<number>
-	if (test) {
-		ind[0] !== index && setIndex(ind[0])
-		test = false
-	}
-	const active = p.map(stak => stak && isCurrent(stak[4]));
-	const stada = active.some(stak => stak);
 	return <nav>
 		<ol className={styles.paths}>
 			<li className={pathname === '/' ? 'active' : 'ekki'}>
@@ -29,21 +19,16 @@ export default function Paths({ files, image }: { files: Array<string | null>, i
 					Heim
 				</Link>
 			</li>
-			{p.map(
-				(stak, nr) => {
-					const href = stak && stak.splice(stada ? -1 : index).join('/')
-					return (href && !href.includes('api') &&
-						<li key={nr} className={isCurrent(href)}>
-							<Link href={'/' + href}>
-								{image ? <Image src={image} alt={image} width="250"
-									height="350"
-									style={{ filter: `hue-rotate(${nr * 90}deg)`, rotate: `${((-1) ** nr) * 2.5 * nr}deg` }} /> : ''}
-								{href.split('/').splice(-1)[0].replace(/\d+/g, match => ` ${match}`)}
-							</Link>
-						</li>
-					)
-				}
-			)}
+			<li className={pathname === '/Kanbanbord' ? 'active' : 'ekki'}>
+				<Link href={'/'}>
+					Kanbanbord
+				</Link>
+			</li>
+			<li className={pathname === '/Notandi' ? 'active' : 'ekki'}>
+				<Link href={'/'}>
+					Notandi
+				</Link>
+			</li>
 		</ol>
 	</nav>
 }

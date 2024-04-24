@@ -22,12 +22,11 @@ export default async function RootLayout({
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
-	const files = (await readFilesFromDir(path.join('src', 'app')))
 	return (
 		<html lang="is">
 			<body className={inter.className}>
 				<header>
-					<NavBar files={files} image="" /> {/* Use the NavBar component */}
+					<NavBar /> {/* Use the NavBar component */}
 				</header>
 				<main className={styles.main}>{children}</main>
 				<footer className={styles.footer}>
