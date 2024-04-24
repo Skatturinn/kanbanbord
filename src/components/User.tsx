@@ -1,6 +1,7 @@
 'use client'
 import React, { useCallback, useEffect, useState } from 'react';
 import styles from "./User.module.scss";
+import Link from 'next/link';
 
 type UserType = {
 	id: string;
@@ -119,11 +120,11 @@ export default function User({ id, token }: UserType) {
 						projects
 							.filter((project) => Number(project.status) === Number(status))
 							.map((project: Project) => (
-								<a key={project.id} href={`/Kanbanbord/projects/${project.id}`} className={styles.projectCard}>
-									<div>
+								<div key={project.id} className={styles.projectCard}>
+									<Link href={`/Kanbanbord/projects/${project.id}`}>
 										<h3>{project.title}</h3>
 										<p>Status: {project.status}</p>
-									</div>
+									</Link>
 									<div id={project.id}>
 										<select value={project.status} onChange={(e) => handleUpdateProjectStatus(project.id, e.target.value)}>
 											{statuses.map((statusOption) => (
@@ -131,7 +132,7 @@ export default function User({ id, token }: UserType) {
 											))}
 										</select>
 									</div>
-								</a>
+								</div>
 							))
 					)}
 				</div>

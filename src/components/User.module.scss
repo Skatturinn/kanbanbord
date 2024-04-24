@@ -60,4 +60,12 @@ $litur5: #74ed4b;
 	width: 100%;
 	margin: 0;
 	text-align: justify;
+
+	a {
+		margin: 0;
+		padding: 0.125em 0;
+		background-color: transparent;
+		width: inherit;
+		text-align: inherit;
+	}
 }
