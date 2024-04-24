@@ -29,8 +29,9 @@ export default function User({ id, token }: UserType) {
 			setLoading(true);
 			const authToken = token;
 			let allProjects: Project[] = [];
-
-			for (let page = 1; page <= 2; page++) {
+			let next = true;
+			let page = 1
+			while (next) {
 				const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects?group_id=${group}&page=${page}`, {
 					headers: {
 						'Authorization': `Bearer ${authToken}`
@@ -39,7 +40,10 @@ export default function User({ id, token }: UserType) {
 				const data = await response.json();
 				if (Array.isArray(data)) {
 					allProjects = [...allProjects, ...data];
+				} else {
+					next = false
 				}
+				page++
 			}
 
 			allProjects.sort((a, b) => a.id.toString().localeCompare(b.id.toString()));
